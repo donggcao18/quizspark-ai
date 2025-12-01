@@ -1,123 +1,124 @@
-var express = require('express');
-var multer = require('multer');
-var fs = require('fs');
-var { GoogleGenerativeAI } = require('@google/generative-ai');
-var router = express.Router();
+const express = require('express');
+const multer = require('multer');
+const fs = require('fs');
 const { PDFParse } = require('pdf-parse');
+const { GoogleGenerativeAI } = require('@google/generative-ai');
 require('dotenv').config();
 
+const router = express.Router();
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
-// Configure multer for file uploads
-var storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-        cb(null, 'uploads/')
-    },
-    filename: function (req, file, cb) {
-        cb(null, Date.now() + '-' + file.originalname)
+
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => cb(null, 'uploads/'),
+    filename: (req, file, cb) => cb(null, `${Date.now()}-${file.originalname}`)
+});
+
+const upload = multer({
+    storage,
+    fileFilter: (req, file, cb) => {
+        const allowed = [
+            'application/pdf',
+            'text/plain',
+            'application/msword',
+            'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+        ];
+        allowed.includes(file.mimetype)
+            ? cb(null, true)
+            : cb(new Error('Only PDF, DOC, DOCX, and TXT files are allowed'));
     }
 });
 
-var upload = multer({
-    storage: storage,
-    fileFilter: function (req, file, cb) {
-        // Accept only PDF, DOC, DOCX, TXT files
-        if (file.mimetype === 'application/pdf' ||
-            file.mimetype === 'application/msword' ||
-            file.mimetype === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' ||
-            file.mimetype === 'text/plain') {
-            cb(null, true);
-        } else {
-            cb(new Error('Only PDF, DOC, DOCX, and TXT files are allowed'));
-        }
-    }
-});
 
-/* POST upload document and generate quiz */
-router.post('/generate', upload.single('document'), async function(req, res, next) {
-    if (!req.file) {
-        return res.status(400).json({ error: 'No document uploaded' });
-    }
+
+router.post('/generate', upload.single('document'), async (req, res) => {
+    if (!req.file) return res.status(400).json({ error: 'No file uploaded' });
 
     try {
-        const quiz = await generateRealQuiz(req.file.path, req.file.originalname);
-        res.json({
-            success: true,
-            filename: req.file.originalname,
-            quiz: quiz
-        });
-    } catch (error) {
-        console.error('Quiz generation error:', error);
-        res.status(500).json({
-            error: 'Failed to generate quiz',
-            details: error.message
-        });
+        const quiz = await generateQuiz(req.file);
+        res.json({ success: true, filename: req.file.originalname, quiz });
+    } catch (err) {
+        console.error('Quiz generation failed:', err);
+        res.status(500).json({ error: 'Quiz generation failed', details: err.message });
     }
 });
 
+
+
 async function extractPdfText(filePath) {
-    const dataBuffer = fs.readFileSync(filePath);
-    const pdfDoc = await pdfjs.getDocument({ data: dataBuffer }).promise;
 
-    let textContent = '';
+    const parser = new PDFParse({ url: filePath });
 
-    for (let i = 1; i <= pdfDoc.numPages; i++) {
-        const page = await pdfDoc.getPage(i);
-        const content = await page.getTextContent();
-        const pageText = content.items.map(item => item.str).join(' ');
-        textContent += pageText + ' ';
-    }
+    fileContent = (await parser.getText()).text;
 
-    return textContent.trim();
+    return fileContent;
 }
 
-async function generateRealQuiz(filePath, filename) {
-    const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" }); // Fixed model name
 
-    let fileContent;
 
-    // Check file type and read accordingly
-    if (filename.toLowerCase().endsWith('.pdf')) {
-        const parser = new PDFParse({ url: filePath });
+async function generateQuiz(file) {
+    const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
 
-        fileContent = (await parser.getText()).text;
-        // console.log(fileContent);
-    } else {
-        // For TXT files
-        fileContent = fs.readFileSync(filePath, 'utf8');
-    }
-    const prompt_generate_from_material = `
-    Based on the following document content, generate a quiz with 5 multiple-choice questions.
-    Return ONLY a valid JSON object with this exact structure (no markdown, no extra text):
-    {
-        "questions": [
-            {
-                "question": "Question text here",
-                "options": ["Option A", "Option B", "Option C", "Option D"],
-                "correct": 0
-            }
-        ]
+    let content = await readFileContent(file);
+
+    // Basic cleaning for safety
+    content = content.replace(/\s+/g, ' ').trim().slice(0, 15000);
+
+    const prompt = buildPrompt_gen_from_material(content);
+
+    const result = await model.generateContent(prompt);
+    const text = cleanLLMOutput(result.response.text());
+
+    let quiz;
+    try {
+        quiz = JSON.parse(text);
+    } catch (e) {
+        console.error("RAW LLM OUTPUT:", text);
+        throw new Error("AI returned invalid JSON");
     }
 
-    Document content:
-    ${fileContent}
-    `;
+    return {
+        title: `Quiz for ${file.originalname}`,
+        questions: quiz.questions,
+        totalQuestions: quiz.questions.length
+    };
+}
 
-    const prompt_generate_from_quiz = `
-    You are a quiz formatter. Transform the following quiz content into a standardized JSON format.
+
+
+async function readFileContent(file) {
+    const path = file.path;
+    const name = file.originalname.toLowerCase();
+
+    if (name.endsWith('.pdf')) {
+        return await extractPdfText(path);
+    }
+    return fs.readFileSync(path, 'utf8');
+}
+
+
+
+function buildPrompt_gen_from_quiz(documentText) {
+    return `
+You are a quiz formatter. Transform the following quiz content into a standardized JSON format.
     The input may contain questions in various formats (numbered, lettered, mixed formatting).
-    
+
     Extract and format into this EXACT JSON structure (no markdown, no extra text):
+    
     {
         "questions": [
             {
-                "question": "Question text here (without question number)",
-                "options": ["Option A", "Option B", "Option C", "Option D"],
-                "correct": 0
-            }
+              "description": "The question text without numbering",
+              "choices": ["Option A", "Option B", "Option C", "Option D"],
+              "question_type": "multiple_choice",
+              "explanation": "A short explanation for the correct answer",
+              "answer": {
+                  "index": 0
+              }
+             }
         ]
     }
-    
+
     Rules:
     - Remove question numbers (1., 2., Q1, etc.)
     - Convert all answer choices to options array (A, B, C, D or 1, 2, 3, 4)
@@ -126,29 +127,54 @@ async function generateRealQuiz(filePath, filename) {
     - If no correct answer is marked, set correct: 0 as default
     - Clean up formatting and extra whitespace
     - Ensure exactly 4 options per question
-    
+
     Quiz content to transform:
-    ${fileContent}
-    `;
-
-    const result = await model.generateContent(prompt_generate_from_quiz);
-    const response = await result.response;
-    let text = response.text();
-
-    // Preprocess: Remove markdown code blocks and clean up
-    text = text.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
-
-    try {
-        const quizData = JSON.parse(text);
-        return {
-            id: Date.now(),
-            title: `Quiz for ${filename}`,
-            questions: quizData.questions,
-            totalQuestions: quizData.questions.length
-        };
-    } catch (parseError) {
-        console.error('Cleaned text:', text);
-        throw new Error('Failed to parse AI response as JSON');
-    }
+    """${documentText}"""
+    `.trim();
 }
+
+function buildPrompt_gen_from_material(documentText) {
+    return `
+You are a quiz generator system.
+
+Based ONLY on the provided content, produce 5 multiple-choice questions.
+
+Return ONLY valid JSON with this exact format:
+
+    {
+        "questions": [
+            {
+              "description": "The question text without numbering",
+              "choices": ["Option A", "Option B", "Option C", "Option D"],
+              "question_type": "multiple_choice",
+              "explanation": "A short explanation for the correct answer",
+              "answer": {
+                  "index": 0
+              }
+             }
+        ]
+    }
+
+Rules:
+- NO markdown
+- NO comments
+- NO trailing commas
+- "correct" must be a number (0–3)
+- Each question MUST have exactly 4 options
+- Use only facts from the text; no hallucinations
+
+Document content:
+    """${documentText}"""
+    `.trim();
+}
+
+
+
+function cleanLLMOutput(text) {
+    return text
+        .replace(/```json/gi, '')
+        .replace(/```/g, '')
+        .replace(/^\s+|\s+$/g, '');
+}
+
 module.exports = router;

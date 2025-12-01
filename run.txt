@@ -1,0 +1,2 @@
+node ./bin/www
+curl.exe -X POST -F "document=@C:\Users\ADMIN\Downloads\2306.15222v2.pdf" http://localhost:3000/api/quiz/generate
