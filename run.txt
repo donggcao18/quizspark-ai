@@ -1,2 +1,19 @@
 node ./bin/www
-curl.exe -X POST -F "document=@C:\Users\ADMIN\Downloads\2306.15222v2.pdf" http://localhost:3000/api/quiz/generate
+curl.exe -X POST -F "document=@C:\Users\ADMIN\Downloads\HW_Normalization_Work.pdf" http://localhost:3000/api/quiz/generate
+
+curl.exe -X POST "http://localhost:3000/api/quiz/adaptive" `
+  -H "Content-Type: application/json" `
+  -d '{
+        "wrong_questions": [
+          {
+            "description": "Given R(A,B,C) and FDs A→B, B→C, compute A+.",
+            "choices": ["A","B","C","D"],
+            "answer": { "index": 0 },
+            "student_answer": { "index": 2 }
+          }
+        ],
+        "num_questions": 3,
+        "difficulty": "mixed"
+      }'
+
+ curl.exe -X POST "http://localhost:3000/api/quiz/adaptive" -H "Content-Type: application/json" -d "@IdeaProjects/Quizspark/uploads/adaptive.json"
