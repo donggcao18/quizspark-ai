@@ -1,8 +1,27 @@
-\chapter{Introduction}
+\chapter{IMPLEMENTATION}
 This is a standard template for the report.
 
-\section{Section 1}
-[Insert content here]
+\section{Architectural Style}
+
+The QuizSpark system adopts a \textbf{three-tier architectural style} combined with a \textbf{microservice approach} for AI functionalities. This architecture is widely utilized in modern web-based systems because it ensures a clear separation of concerns, high scalability, and ease of maintenance.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{images/HighArchitecture.png}
+    \caption{QuizSpark System architecture diagram}
+    \label{fig:high_architecture}
+\end{figure}
+
+At a high level, the system is organized into three primary tiers:
+\begin{itemize}
+    \item \textbf{Presentation Tier:} This layer includes web and mobile clients that provide intuitive user interfaces for students, teachers, and administrators.
+    \item \textbf{Application Tier:} This tier serves as the core of the system, responsible for handling business logic, processing user requests, and coordinating interactions between various components.
+    \item \textbf{Data Tier:} This layer manages persistent data storage, including sensitive user information, quiz databases, and comprehensive learning analytics.
+\end{itemize}
+
+
+
+Furthermore, the system integrates an \textbf{AI Engine} implemented as a dedicated microservice. This microservice handles computationally intensive tasks, such as automatic question generation and adaptive learning recommendations. It communicates with the main backend server through well-defined \textbf{RESTful APIs}, allowing the AI component to be developed, deployed, and scaled independently from the rest of the architecture.
 
 \subsection{Subsection 1.1}
 [Insert content here]

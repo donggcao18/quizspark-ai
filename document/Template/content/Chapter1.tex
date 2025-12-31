@@ -1,8 +1,716 @@
-\chapter{Introduction}
-This is a standard template for the report.
+\chapter{REQUIREMENT ANALYSIS}
+\section{Problem Definition}
 
-\section{Section 1}
-[Insert content here]
+\subsection{Background and Motivation}
+Students today face difficulties in finding suitable learning tools. Existing assessment and learning platforms on the market such as \textbf{Quizizz, Azota, and Google Forms} still have several limitations in terms of:
+\begin{itemize}
+    \item \textbf{Personalization:} Lack of mechanisms to tailor learning content to each individual.
+    \item \textbf{Feedback:} Feedback is often simple and does not provide in-depth analysis.
+    \item \textbf{Interaction:} The learning environment is not flexible or engaging enough.
+\end{itemize}
+\textbf{QuizSpark} was created with the goal of overcoming these weaknesses, providing a more flexible and intelligent learning environment that meets the growing demand for personalized education.
 
-\subsection{Subsection 1.1}
-[Insert content here]
+\subsection{Problem Description}
+The core problem that QuizSpark aims to address can be specified as follows:
+\begin{itemize}
+    \item \textbf{Lack of Adaptive Difficulty:} Existing platforms only provide static quizzes. They lack the ability to automatically adjust the difficulty level of questions based on the learner’s actual competency and learning progress. 
+    \item \textbf{Unverified Content Quality:} The question pool mainly comes from user-generated content (UGC), leading to a lack of consistency and no strict quality validation in terms of academic standards.
+    \item \textbf{Shallow Feedback:} Post-assessment feedback usually stops at Right/Wrong or total score. It does not provide in-depth analysis of weak knowledge areas, common mistakes, or suggestions for the next learning steps.
+\end{itemize}
+
+\subsection{Project Objectives}
+The QuizSpark project is guided by the following strategic objectives:
+\begin{itemize}
+    \item \textbf{Create a Learner-Centric Experience:} Design an intuitive and user-friendly interface and learning flow that prioritize students’ needs and experience.
+    \item \textbf{Integrate an Adaptive Learning Mechanism:} Implement algorithms to personalize the sequence of questions and learning materials, ensuring learners always face challenges suitable to their current level ($\pm$ Zone of Proximal Development - ZPD).
+    \item \textbf{Build an Analytics Dashboard:} Develop a visual interface that allows learners and teachers to track detailed results, perform in-depth analysis of strengths and weaknesses, and generate personalized learning recommendations.
+\end{itemize}
+
+\section{Stakeholder Analysis}
+Analyzing stakeholders is essential to ensure that \textbf{QuizSpark} effectively meets the needs of all user groups and system operators.
+
+\begin{table}[h]
+\centering
+\label{tab:stakeholder}
+\begin{tabular}{|p{3cm}|p{5cm}|p{5cm}|}
+\hline
+\textbf{Stakeholder} & \textbf{Role / Objective} & \textbf{Main Needs} \\
+\hline
+Students / Learners & Primary users of the system. Their goal is to improve academic performance through personalized learning paths. & Take adaptive quizzes, track detailed learning progress, and receive study suggestions based on weaknesses.\\
+\hline
+Teachers / Tutors & Content creators and managers. Their goal is to enhance teaching and assessment effectiveness. & Manage classes, create high-quality exams, and view student statistics and class performance analytics.\\
+\hline
+Developers & Build and deploy system features. Their goal is performance and reliability. & Design scalable, maintainable code and integrate AI/ML technologies.\\
+\hline
+System Administrators (Admins) & Manage users and content across the platform. Their goal is safety and compliance. & Moderate content, secure user data, and monitor system performance and stability.\\
+\hline
+Advertising Partners & Provide revenue for the platform. Their goal is to reach appropriate target audiences. & Implement contextual advertising mechanisms suitable for students, ensuring ads are non-intrusive and do not disrupt the learning experience.\\
+\hline
+\end{tabular}
+\end{table}
+So, the need of \textbf{Students} (Adaptive Testing, Detailed Progress Tracking) are central, directly influencing Objective 1.3. The needs of \textbf{Teachers} (Content Creation, Analytics) determine the usefulness of the tool in real educational environments.
+
+\section{System Overview}
+\subsection{Data Flow Diagram}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{images/DFD.png}
+    \caption{Data Flow Diagram for QuizSpark System}
+    \label{fig:dfd_quizspark}
+\end{figure}
+
+\subsection{State Diagram}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{images/StateDiagram.png}
+    \caption{State Diagram for QuizSpark System}
+    \label{fig:state_quizspark}
+\end{figure}
+
+\subsection{Entity Relationship Diagram}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{images/EntityDiagram.png}
+    \caption{Entity Relationship Diagram for QuizSpark System}
+    \label{fig:erd_quizspark}
+\end{figure}
+
+
+\section{Requirements}
+\subsection{Students \& Teacher Functional Requirements}
+
+\paragraph{FR-U01 - Register/Login}
+Allows both students and teachers to register a new account or log in to the system using existing credentials.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{images/FR-U01.png}
+    \caption{Sequence Diagram - FR-U01 - Register/Login}
+\end{figure}
+
+\noindent\begin{table}[H]
+\centering
+\label{tab:uc_frs01_final}
+\begin{tabular}{|p{3cm}|p{13cm}|}
+\hline
+\textbf{Component} & \textbf{Content} \\
+\hline
+Requirements & Register / Login \\
+\hline
+Code & FR-U01 \\
+\hline
+Main Actor & Student \& Teacher \\
+\hline
+Goal & Enable users (students and teachers) to create a new account or log in to an existing one on QuizSpark. \\
+\hline
+Precondition & The user has not logged in (no active session). \\
+\hline
+Postcondition & The user is successfully authenticated and redirected to their Dashboard. \\
+\hline
+Main Flow & \vspace{-0.3 cm}
+\begin{enumerate}[nosep, leftmargin=*]
+    \item The user selects ``Register'' or ``Login'' on the interface.
+    \item The user enters account information (e.g., email/username and password).
+    \item The system validates the input data (format, existence, and password match).
+    \item If valid, the system creates a login session.
+    \item The system displays the user's Dashboard.
+\end{enumerate} \\
+\hline
+Alternative Flow & \vspace{-0.3 cm}
+\begin{itemize}[nosep, leftmargin=*]
+    \item \textbf{3a: Invalid information:} If the input is invalid or does not exist, the system displays an error message and asks for re-entry.
+    \item \textbf{4a: Unverified account:} If the account exists but has not been verified via email, the system requests email verification before allowing login.
+\end{itemize} \\
+\hline
+\end{tabular}
+\end{table}
+
+\paragraph{FR-U02 - Create, Edit, Delete Personal Quiz}
+Allows both students and teachers to create, modify, or delete their own quizzes for practice or sharing purposes.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{images/FR-U02.png}
+    \caption{Activity Diagram - FR-U02 - Manage Personal Quiz}
+\end{figure}
+
+\noindent\begin{table}[H]
+\centering
+\label{tab:uc_fru02_final}
+\begin{tabular}{|p{3cm}|p{13cm}|}
+\hline
+\textbf{Component} & \textbf{Content} \\
+\hline
+Requirements & Create, Edit, Delete Personal Quiz \\
+\hline
+Code & FR-U02 \\
+\hline
+Main Actor & Student \& Teacher \\
+\hline
+Goal & Allow users (students and teachers) to manage their own quizzes for practice, teaching, or sharing purposes. \\
+\hline
+Precondition & The user has logged in (FR-U01). \\
+\hline
+Postcondition & The created or updated quiz is stored in the database; deleted quizzes are permanently removed. \\
+\hline
+Main Flow & \vspace{-0.3cm}
+\begin{enumerate}[nosep, leftmargin=*]
+    \item The user navigates to ``My Quizzes'' and chooses to create, edit, or delete a quiz.
+    \item For creation: the system displays a form to input quiz title, description, visibility (private/public), and questions.
+    \item The user enters quiz information and adds questions (multiple choice, short answer, etc.).
+    \item The user saves the quiz; the system validates and stores it in the database.
+    \item For editing: the user modifies existing quiz details or questions and saves the changes.
+    \item For deletion: the system asks for confirmation before permanently deleting the selected quiz.
+\end{enumerate} \\
+\hline
+Alternative Flow & \vspace{-0.3cm}
+\begin{itemize}[nosep, leftmargin=*]
+    \item \textbf{2a: Missing information:} If required fields are left empty, the system notifies the user to complete them.
+    \item \textbf{4a: Invalid input:} If question formats or inputs are invalid, the system rejects the quiz and highlights the errors.
+    \item \textbf{6a: Deletion canceled:} If the user cancels the deletion, the quiz remains unchanged.
+\end{itemize} \\
+\hline
+\end{tabular}
+\end{table}
+
+
+
+\paragraph{FR-U03 - View Leaderboard}
+Display the leaderboard showing users’ scores and achievements within a class or across the entire system to encourage positive competition and engagement.
+
+\noindent
+\begin{table}[H]
+\centering
+\label{tab:uc_frs04_final}
+\begin{tabular}{|p{3cm}|p{13cm}|}
+\hline
+\textbf{Component} & \textbf{Content} \\
+\hline
+Requirements & View Leaderboard \\
+\hline
+Code & FR-U03 \\
+\hline
+Main Actor & Student \& Teacher \\
+\hline
+Goal & Allow users (students and teachers) to view leaderboards that display scores and rankings to enhance motivation and competitive learning. \\
+\hline
+Precondition & The system already has quiz result data from multiple users. \\
+\hline
+Postcondition & Display a leaderboard sorted by score, completion time, or quiz performance. \\
+\hline
+Main Flow & \vspace{-0.3cm}
+\begin{enumerate}[nosep, leftmargin=*]
+    \item The user selects the “Leaderboard” option from the interface.
+    \item The system retrieves quiz results and achievements from the database.
+    \item The system sorts the data by ranking.
+    \item The leaderboard is displayed with user name, score, and rank (Top 1, Top 10, etc.).
+    \item The user can filter the leaderboard by class or system-wide.
+\end{enumerate} \\
+\hline
+Alternative Flow & \vspace{-0.3cm}
+\begin{itemize}[nosep, leftmargin=*]
+    \item \textbf{2a: No data:} If no quiz results are available, the system displays the message “No leaderboard data available.”
+\end{itemize} \\
+\hline
+\end{tabular}
+\end{table}
+
+\paragraph{FR-U04 - Generate Questions (AI)}
+Allow users to utilize the AI feature to automatically generate questions based on topic, difficulty level, and desired format, supporting faster quiz creation and learning preparation.
+
+\noindent
+\begin{table}[H]
+\centering
+\label{tab:uc_frs05_final}
+\begin{tabular}{|p{3cm}|p{13cm}|}
+\hline
+\textbf{Component} & \textbf{Content} \\
+\hline
+Requirements & Generate Questions (AI) \\
+\hline
+Code & FR-U04 \\
+\hline
+Main Actor & Student \& Teacher \\
+\hline
+Goal & Enable users (students and teachers) to use AI to automatically generate questions by topic, difficulty level, and preferred format to assist in quiz creation or study practice. \\
+\hline
+Precondition & The user is logged in and has access to the AI question generation tool. The AI system is functioning properly. \\
+\hline
+Postcondition & The system displays a list of AI-generated questions for the user to preview, modify, and select for inclusion in a quiz or study set. \\
+\hline
+Main Flow & \vspace{-0.3cm}
+\begin{enumerate}[nosep, leftmargin=*]
+    \item The user opens the “AI Question Generator” tool.
+    \item The user enters the topic, difficulty level, question type, and desired number of questions.
+    \item The AI system processes the request and generates a list of questions.
+    \item The system displays the generated questions for the user to review.
+    \item The user selects or edits suitable questions to add to the quiz or study set.
+    \item The system saves the selected questions into the corresponding quiz or collection.
+\end{enumerate} \\
+\hline
+Alternative Flow & \vspace{-0.3cm}
+\begin{itemize}[nosep, leftmargin=*]
+    \item \textbf{3a: Missing input data:} The system displays the message “Please fill in all required fields before generating questions.”
+    \item \textbf{3b: AI error or generation failure:} The system displays the message “Unable to generate questions. Please try again later.”
+\end{itemize} \\
+\hline
+\end{tabular}
+\end{table}
+
+\paragraph{FR-U05 - Multi-Platform Access}
+Allow users to access and use the QuizSpark platform seamlessly on both web and mobile devices with synchronized data and consistent user experience.
+
+\noindent
+\begin{table}[H]
+\centering
+\label{tab:uc_frs06_final}
+\begin{tabular}{|p{3cm}|p{13cm}|}
+\hline
+\textbf{Component} & \textbf{Content} \\
+\hline
+Requirements & Access the platform on both web and mobile devices \\
+\hline
+Code & FR-U05 \\
+\hline
+Main Actor & Student \& Teacher \\
+\hline
+Goal & Enable users (students and teachers) to access the QuizSpark platform from web browsers or mobile applications while maintaining data consistency and usability. \\
+\hline
+Precondition & The user has a registered account and a stable internet connection. \\
+\hline
+Postcondition & The user can log in and use the system across devices with synchronized progress and quiz data. \\
+\hline
+Main Flow & \vspace{-0.3cm}
+\begin{enumerate}[nosep, leftmargin=*]
+    \item The user opens QuizSpark on a web browser or mobile app.
+    \item The user logs in using their account credentials (FR-U01).
+    \item The system retrieves user data (quizzes, results, progress) from the database.
+    \item The system adapts the interface layout and functionality according to the device type.
+    \item The user can access all core features, including taking quizzes, viewing results, and managing personal content.
+    \item Any actions performed on one device (e.g., creating a quiz, submitting results) are synchronized across all devices.
+\end{enumerate} \\
+\hline
+Alternative Flow & \vspace{-0.3cm}
+\begin{itemize}[nosep, leftmargin=*]
+    \item \textbf{1a: Unsupported device or browser:} The system displays a message suggesting the use of supported platforms or the latest version.
+    \item \textbf{2a: Connection error:} If the internet connection fails, the system switches to limited offline mode (if available) and syncs data when reconnected.
+    \item \textbf{4a: Display issue:} If the interface does not load properly on the device, the user is prompted to refresh or update the application.
+\end{itemize} \\
+\hline
+\end{tabular}
+\end{table}
+
+\paragraph{FR-U06 - Share Quizzes}
+Allow users to share created quizzes publicly or with selected users (students or teachers) through unique links or controlled access permissions.
+
+\noindent
+\begin{table}[H]
+\centering
+\label{tab:uc_frs07_final}
+\begin{tabular}{|p{3cm}|p{13cm}|}
+\hline
+\textbf{Component} & \textbf{Content} \\
+\hline
+Requirements & Share quizzes publicly or with selected users \\
+\hline
+Code & FR-U06 \\
+\hline
+Main Actor & Student \& Teacher \\
+\hline
+Goal & Enable users to share their created quizzes with others — either publicly for everyone or privately with specific users. \\
+\hline
+Precondition & The user is logged in and has at least one quiz created. \\
+\hline
+Postcondition & The quiz becomes available to the selected audience according to the chosen sharing option. \\
+\hline
+Main Flow & \vspace{-0.3cm}
+\begin{enumerate}[nosep, leftmargin=*]
+    \item The user opens the “My Quizzes” section.
+    \item The user selects a quiz to share.
+    \item The system displays sharing options: “Public” or “Selected Users”.
+    \item The user chooses a sharing method:
+    \begin{itemize}[nosep, leftmargin=*]
+        \item \textbf{Public:} The quiz is accessible to all users through a public link or the shared library.
+        \item \textbf{Selected Users:} The user specifies recipient accounts (students/teachers) or enters email addresses.
+    \end{itemize}
+    \item The system generates a unique access link or updates access permissions.
+    \item The recipients receive a notification or can access the quiz via the provided link.
+\end{enumerate} \\
+\hline
+Alternative Flow & \vspace{-0.3cm}
+\begin{itemize}[nosep, leftmargin=*]
+    \item \textbf{2a: No quiz available:} The system notifies the user that there are no quizzes to share.
+    \item \textbf{4a: Invalid recipient:} If entered user information is invalid, the system prompts re-entry.
+    \item \textbf{5a: Permission error:} If the user lacks sharing privileges, the system restricts access and displays an error message.
+\end{itemize} \\
+\hline
+\end{tabular}
+\end{table}
+
+\subsection{Student Functional Requirements}
+\paragraph{FR-S01 - Join Quiz Session}
+Allow students to join real-time competitive quiz sessions hosted by teachers using a session code or link.
+
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{images/FR-S01.png}
+    \caption{Sequence Diagram - FR-S01 - Join Quiz Session}
+\end{figure}
+
+\noindent
+\begin{table}[H]
+\centering
+\label{tab:uc_frs08_final}
+\begin{tabular}{|p{3cm}|p{13cm}|}
+\hline
+\textbf{Component} & \textbf{Content} \\
+\hline
+Requirements & Join a competitive quiz session \\
+\hline
+Code & FR-S01 \\
+\hline
+Main Actor & Student \\
+\hline
+Goal & Allow students to participate in real-time quiz sessions using a session code or invitation link provided by the teacher. \\
+\hline
+Precondition & The student is logged in and has a valid session code or access link. \\
+\hline
+Postcondition & The student successfully joins the live quiz session and can answer questions in real time. \\
+\hline
+Main Flow & \vspace{-0.3cm}
+\begin{enumerate}[nosep, leftmargin=*]
+    \item The student selects “Join Quiz” from the dashboard.
+    \item The student enters the session code or clicks the invitation link.
+    \item The system verifies the session code and participant eligibility.
+    \item The student joins the quiz lobby and waits for the host to start the session.
+    \item Once started, the system displays questions one by one for the student to answer.
+    \item The student submits answers, and the system updates their real-time score.
+\end{enumerate} \\
+\hline
+Alternative Flow & \vspace{-0.3cm}
+\begin{itemize}[nosep, leftmargin=*]
+    \item \textbf{2a: Invalid or expired code:} The system displays “Invalid session code. Please check and try again.”
+    \item \textbf{3a: Session full or closed:} The system displays “Unable to join. The session is full or has ended.”
+\end{itemize} \\
+\hline
+\end{tabular}
+\end{table}
+
+\paragraph{FR-S02 - Submit Quiz \& View Results}
+After completing a quiz, users can submit their answers. The system automatically grades the submission, stores results, and provides detailed analytics for performance review.
+
+\noindent
+\begin{table}[H]
+\centering
+\label{tab:uc_frs02_final}
+\begin{tabular}{|p{3cm}|p{13cm}|}
+\hline
+\textbf{Component} & \textbf{Content} \\
+\hline
+Requirements & Submit Quiz \& View Results \\
+\hline
+Code & FR-S02 \\
+\hline
+Main Actor & Student \\
+\hline
+Goal & Allow students to submit completed quizzes, automatically receive grading results, and review performance analytics. \\
+\hline
+Precondition & The user has completed all questions in a valid quiz (FR-U02). \\
+\hline
+Postcondition & The system grades the quiz, stores detailed results (score, time, answers) in the database, and displays analytics for the user. \\
+\hline
+Main Flow & \vspace{-0.3cm}
+\begin{enumerate}[nosep, leftmargin=*]
+    \item The user selects ``Submit Quiz'' after answering all questions.
+    \item The system asks for submission confirmation.
+    \item Upon confirmation, the system collects answers, locks editing, and sends data to the server.
+    \item The system automatically grades the submission based on the question bank.
+    \item The system records results (score, completion time, and detailed responses) in the database.
+    \item The system displays the result screen, including:
+    \begin{itemize}[nosep, leftmargin=*]
+        \item Total score and completion time.
+        \item Correct/incorrect answers and explanations (if available).
+        \item Performance charts summarizing strengths and weaknesses by topic.
+    \end{itemize}
+    \item The user can download or review detailed reports for further assessment or feedback.
+\end{enumerate} \\
+\hline
+Alternative Flow & \vspace{-0.3cm}
+\begin{itemize}[nosep, leftmargin=*]
+    \item \textbf{2a: Submission canceled:} If the user cancels, the system returns to the quiz interface.
+    \item \textbf{3a: Connection lost:} If the network disconnects during submission, progress is saved temporarily and resubmitted automatically once restored.
+    \item \textbf{4a: Grading error:} If automatic grading fails, the quiz is marked as “Pending Review” for manual evaluation by the teacher.
+    \item \textbf{6a: Missing data:} If some analytics data cannot be retrieved, the system shows available results with a warning message.
+\end{itemize} \\
+\hline
+\end{tabular}
+\end{table}
+
+\subsection{Teacher Functional Requirements}
+
+\paragraph{FR-T01 - Manage Classes}
+Teachers can manage class lists, including adding or removing students and assigning quizzes to classes.
+
+\noindent
+\begin{tabular}{|p{3cm}|p{13cm}|}
+\hline
+\textbf{Component} & \textbf{Content} \\
+\hline
+Requirements & Manage Classes \\
+\hline
+Code & FR-T01 \\
+\hline
+Main Actor & Teacher \\
+\hline
+Goal & Manage class lists by adding or removing students and assigning quizzes to each class to monitor learning progress. \\
+\hline
+Precondition & The teacher is logged in and has at least one class created in the system. \\
+\hline
+Postcondition & The class list is updated, students are added or removed, and quizzes are assigned to the corresponding class. \\
+\hline
+Main Flow & \vspace{-0.3cm}
+\begin{enumerate}[nosep, leftmargin=*]
+    \item The teacher accesses the “Class Management” section.
+    \item The system displays the list of existing classes.
+    \item The teacher selects a specific class to edit.
+    \item The teacher can perform the following actions: add a new student, remove a student, or assign a quiz to the class.
+    \item The system saves the changes and displays a confirmation message.
+\end{enumerate} \\
+\hline
+Alternative Flow & \vspace{-0.3cm}
+\begin{itemize}[nosep, leftmargin=*]
+    \item \textbf{4a: Student not found:} When adding a student with an invalid ID or email, the system displays “Student not found.”
+    \item \textbf{4b: Quiz assignment error:} If the system cannot assign the quiz due to network or data issues, it displays “Unable to assign quiz. Please try again later.”
+\end{itemize} \\
+\hline
+\end{tabular}
+
+\paragraph{FR-T02 - Host Quiz Session}
+Allow teachers to host and manage real-time competitive quiz sessions, inviting students to join via a session code or link.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{images/FR-T02.png}
+    \caption{Activity Diagram - FR-T02 - Host Quiz Session}
+\end{figure}
+
+\noindent
+\begin{table}[H]
+\centering
+\label{tab:uc_frt02_final}
+\begin{tabular}{|p{3cm}|p{13cm}|}
+\hline
+\textbf{Component} & \textbf{Content} \\
+\hline
+Requirements & Host a competitive quiz session \\
+\hline
+Code & FR-T02 \\
+\hline
+Main Actor & Teacher \\
+\hline
+Goal & Enable teachers to host interactive quiz sessions, monitor participation, and view results in real time. \\
+\hline
+Precondition & The teacher is logged in and has at least one quiz ready to host. \\
+\hline
+Postcondition & The system starts a live session and allows students to join using a unique code or link. \\
+\hline
+Main Flow & \vspace{-0.3cm}
+\begin{enumerate}[nosep, leftmargin=*]
+    \item The teacher opens the “Host Quiz” feature.
+    \item The teacher selects a quiz to host.
+    \item The system generates a unique session code and invitation link.
+    \item The teacher shares the code/link with students.
+    \item Students join the session, and the teacher monitors participant status.
+    \item The teacher starts the quiz, and the system presents questions to all participants.
+    \item The teacher views live responses and leaderboard updates.
+    \item After completion, the system displays summary results for the teacher and students.
+\end{enumerate} \\
+\hline
+Alternative Flow & \vspace{-0.3cm}
+\begin{itemize}[nosep, leftmargin=*]
+    \item \textbf{2a: No quiz available:} The system displays “Please create or select a quiz before hosting.”
+    \item \textbf{3a: Network issue or timeout:} The system shows “Unable to start session. Please check your connection.”
+\end{itemize} \\
+\hline
+\end{tabular}
+\end{table}
+
+
+
+\subsection{Admin Functional Requirements}
+
+\paragraph{FR-A01 - Manage Users}
+The administrator has the authority to add, block/deactivate, or delete user accounts (students and teachers) from the system.
+
+\noindent
+\begin{tabular}{|p{3cm}|p{13cm}|}
+\hline
+\textbf{Component} & \textbf{Description} \\
+\hline
+Requirements & Manage Users \\
+\hline
+Code & FR-A01 \\
+\hline
+Primary Actor & \textbf{Admin} \\
+\hline
+Goal & The administrator manages user accounts, including adding new users, blocking/deactivating, or deleting student and teacher accounts to maintain stable and secure system operation. \\
+\hline
+Preconditions & The administrator is logged in and has access to the admin dashboard. \\
+\hline
+Postconditions & The system updates the user’s status or information accordingly (added, blocked, or deleted). \\
+\hline
+Main Flow & \vspace{-0.3cm}
+\begin{enumerate}[nosep, leftmargin=*]
+    \item The administrator navigates to the “User Management” section.
+    \item The system displays the list of current users.
+    \item The administrator selects an action: add new, block, or delete an account.
+    \item The administrator enters or confirms the required information.
+    \item The system applies the changes and displays a confirmation message.
+\end{enumerate} \\
+\hline
+Alternative Flow & \vspace{-0.3cm}
+\begin{itemize}[nosep, leftmargin=*]
+    \item \textbf{4a: Invalid information entered:} The system displays the message “Invalid user information.”
+    \item \textbf{5a: Connection or data saving error:} The system displays the message “Unable to update information, please try again.”
+\end{itemize} \\
+\hline
+\end{tabular}
+
+
+\paragraph{FR-A02 - Moderate Content}
+The administrator performs moderation and management of quiz content created by users or inappropriate feedback/comments on the platform.
+
+\noindent
+\begin{tabular}{|p{3cm}|p{13cm}|}
+\hline
+\textbf{Component} & \textbf{Description} \\
+\hline
+Requirements & Moderate Content \\
+\hline
+Code & FR-A02 \\
+\hline
+Primary Actor & \textbf{Admin} \\
+\hline
+Goal & The administrator moderates quizzes, feedback, or inappropriate comments to ensure the quality and safety of the platform. \\
+\hline
+Preconditions & The administrator is logged in and has access to the content moderation tool. \\
+\hline
+Postconditions & Violating content is deleted, hidden, or flagged for review; valid content remains unchanged. \\
+\hline
+Main Flow & \vspace{-0.3cm}
+\begin{enumerate}[nosep, leftmargin=*]
+    \item The administrator navigates to the “Content Moderation” section.
+    \item The system displays a list of recent quizzes, comments, or feedback.
+    \item The administrator reviews reported or potentially violating content.
+    \item The administrator selects an action: keep, hide, or delete the content.
+    \item The system updates the status and logs the moderation history.
+\end{enumerate} \\
+\hline
+Alternative Flow & \vspace{-0.3cm}
+\begin{itemize}[nosep, leftmargin=*]
+    \item \textbf{3a: No content to moderate:} The system displays the message “No violating content found.”
+    \item \textbf{5a: Processing error:} If the system cannot delete or update the status, it displays the message “Unable to perform the action, please try again.”
+\end{itemize} \\
+\hline
+\end{tabular}
+
+
+\subsection{AI Engine Functional Requirements}
+
+\paragraph{FR-AI01 - Auto-generate Questions}
+The AI Engine must be able to automatically generate new and valid questions based on input topics and difficulty levels, supporting the enrichment of the question database.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.95\textwidth]{images/FR-AI01.png}
+    \caption{Sequence Diagram - FR-AI01 - Generate Questions (AI)}
+\end{figure}
+
+\noindent
+\begin{tabular}{|p{3cm}|p{13cm}|}
+\hline
+\textbf{Component} & \textbf{Description} \\
+\hline
+Requirements & Auto-generate Questions \\
+\hline
+Code & FR-AI01 \\
+\hline
+Primary Actor & \textbf{AI Engine} \\
+\hline
+Goal & Automatically generate valid questions based on the provided topic and difficulty level, in order to expand the question database for learning and assessment purposes. \\
+\hline
+Preconditions & The AI system is running properly and has access to the linguistic data and input topics. \\
+\hline
+Postconditions & A list of newly generated questions is stored in the database and ready for teachers to use. \\
+\hline
+Main Flow & \vspace{-0.3cm}
+\begin{enumerate}[nosep, leftmargin=*]
+    \item The AI receives a request to generate questions along with input parameters (topic, difficulty, format).
+    \item The AI processes the request, analyzes the content, and generates questions.
+    \item The system validates the generated questions and checks for duplication.
+    \item The system saves valid questions to the database.
+\end{enumerate} \\
+\hline
+Alternative Flow & \vspace{-0.3cm}
+\begin{itemize}[nosep, leftmargin=*]
+    \item \textbf{2a: Insufficient input data:} The system displays the message “Insufficient data to generate questions.”
+    \item \textbf{3a: Duplicate question detected:} The question is discarded and not saved.
+\end{itemize} \\
+\hline
+\end{tabular}
+
+\paragraph{FR-AI02 - Suggest Personalized Quizzes}
+The AI uses learning models (such as IRT) to analyze each student’s ability and suggest suitable quizzes to optimize their learning process.
+
+\noindent
+\begin{tabular}{|p{3cm}|p{13cm}|}
+\hline
+\textbf{Component} & \textbf{Description} \\
+\hline
+Requirements & Suggest Personalized Quizzes \\
+\hline
+Code & FR-AI02 \\
+\hline
+Primary Actor & \textbf{AI Engine} \\
+\hline
+Goal & Analyze each student’s ability based on their quiz history and apply a learning model (e.g., Item Response Theory - IRT) to recommend quizzes with adaptive difficulty, optimizing their learning experience. \\
+\hline
+Preconditions & The system has historical data on scores, completion times, and the AI Engine is functioning normally. \\
+\hline
+Postconditions & The system displays a personalized list of recommended quizzes for the student. \\
+\hline
+Main Flow & \vspace{-0.3cm}
+\begin{enumerate}[nosep, leftmargin=*]
+    \item The AI collects and analyzes the student’s historical performance data.
+    \item The AI estimates the student’s ability using the IRT model or an equivalent method.
+    \item The AI selects quizzes with corresponding difficulty levels and relevant topics.
+    \item The system displays the personalized quiz recommendations to the student.
+\end{enumerate} \\
+\hline
+Alternative Flow & \vspace{-0.3cm}
+\begin{itemize}[nosep, leftmargin=*]
+    \item \textbf{1a: Missing student data:} The system displays “Insufficient data to suggest quizzes.”
+    \item \textbf{3a: Model error or no suitable quiz found:} The system displays “No suitable quizzes available, please try again later.”
+\end{itemize} \\
+\hline
+\end{tabular}
+\subsection{Non-Functional Requirements (NFR)}
+
+\paragraph{NFR-01 - Usability}
+The user interface must be friendly, intuitive, and easy to use for both students (teenagers) and teachers.
+
+\paragraph{NFR-02 - Performance}
+The system must maintain a response time of under 2 seconds for quiz interactions and submissions, even during peak load conditions.
+
+\paragraph{NFR-03 - Security}
+User personal data, including login credentials and scores, must be securely encrypted and protected from unauthorized access (e.g., using SSL/TLS and password hashing).
+
+\paragraph{NFR-04 - Availability}
+The system must operate reliably 24/7, ensuring that monthly downtime remains below 1\%.
+
+\paragraph{NFR-05 - Scalability}
+The system must be built on an architecture that supports easy scalability (both horizontal and vertical scaling) to handle increased user loads, especially during exam periods.
+
