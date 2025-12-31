@@ -16,4 +16,4 @@ curl.exe -X POST "http://localhost:3000/api/quiz/adaptive" `
         "difficulty": "mixed"
       }'
 
- curl.exe -X POST "http://localhost:3000/api/quiz/adaptive" -H "Content-Type: application/json" -d "@IdeaProjects/Quizspark/uploads/adaptive.json"
+ curl.exe -X POST "http://localhost:3000/api/quiz/adaptive" -H "Content-Type: application/json" -d "@IdeaProjects/quizspark-ai/uploads/adaptive.json"

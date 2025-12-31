@@ -1,0 +1,62 @@
+%--------------------------------------------------------------------------
+%- The following produces the document header including the title.        |
+%- The document header includes: the college/university name, faculty,    |
+%- department, course number and title as well as the assignment/homework | 
+%- title and due date.                                                    | 
+%-------------------------------------------------------------------------|
+%
+\noindent % <-- need to have this first.
+%
+\begin{minipage}{.7\textwidth}
+    { \textsc{\textbf{\college}}}{ }\\ 
+    \small\textsc{\faculty}\\%
+    \small\textsc{\department}
+\end{minipage}%
+\hfill	
+\begin{minipage}{0.3\textwidth}%
+    \raggedleft%
+    {\Large \textsc{\textbf{\coursenumber}} \par}
+    \doublerule % insert a double rule.
+    \textsc{\coursetitle}\\
+\end{minipage}%
+\vskip 5pt
+\hrule \vskip 2pt \hrule
+\vspace{1.5cm}
+{
+    %--> Insert homework title and due date.
+    \begin{center}
+    	\includegraphics[scale=0.12]{images/logo-soict-hust-1.png}
+    \end{center}
+	\vspace{1.5cm}
+    \hrule \vskip 2pt \hrule
+    \vspace{1cm}
+    \begin{center}
+        \scshape 
+        \Huge \color{darkestred}{\doctitle}{ }
+        \vspace{1cm}    
+    \end{center}
+}
+{
+    \hrule \vskip 2pt \hrule \vspace{1cm}
+    
+    \centering  \textsc{\textbf{\Large [PROJECT TITLE]}} \\
+    \vspace{.4cm}
+    \textsc{Class: \csection \ - Semester: \semester} \\
+ \vspace{.3cm}
+    \vspace{.3cm}\vskip 22pt
+    \small{\textbf{\normalsize \textsc{Group [Number] }}\\ \vskip 13pt
+        \begin{tabular}{l c l}
+            [Student Name 1] & [ID 1] & [Email 1] \\ \relax
+            [Student Name 2] & [ID 2] & [Email 2] \\
+        \end{tabular}        
+    }  
+    \\
+        \vspace{.4cm}
+	\vskip 20pt
+	\textbf{\normalsize \textsc{Instructor:} \instructor} \\
+    \vspace{.5cm}
+}    
+\vspace{.5cm}
+\hrule
+\vskip 4cm
+\textbf{[City] --- [Date]}
