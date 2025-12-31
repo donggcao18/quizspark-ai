@@ -1,14 +1,14 @@
 % !TeX spellcheck = en_US
 \documentclass[12pt, a4paper]{book}
 \usepackage[utf8]{inputenc}
-\usepackage[vietnamese]{babel}
+% \usepackage[vietnamese]{babel}
 
 \setlength{\belowcaptionskip}{-10pt}
 \setlength{\intextsep}{10pt plus 2pt minus 2pt}
 \setlength{\parskip}{0.5\baselineskip}%
 \setlength{\parindent}{0pt}%
 % Set the title of the current document to be produced.
-\newcommand{\doctitle}{{{\Huge \textbf{Template Report}}}}
+\newcommand{\doctitle}{{{\Huge \textbf{PROJECT REPORT}}}}
 % Command for the due date of the homework.
 %\newcommand{\duedate}{\color{rltred}{\faCalendarCheckO { }Due date: May 1st, before midnight \faCalendarCheckO	}}
 
@@ -53,7 +53,7 @@
     %-- Make the header of the document                          |
     %------>------>------>------>------>------>------>------>--> |
     \input{includes/document-header}
-    \selectlanguage{vietnamese}
+    % \selectlanguage{english}
     %\hrule width0.3\textwidth
     \begingroup
     \normalsize
@@ -61,11 +61,11 @@
 
         \tableofcontents
         \phantomsection
-        \addcontentsline{toc}{chapter}{Mục lục}
+        \addcontentsline{toc}{chapter}{Table of Content}
         
         \listoffigures
         \phantomsection
-        \addcontentsline{toc}{chapter}{Danh sách hình ảnh}
+        \addcontentsline{toc}{chapter}{Figures List}
         
         \let\cleardoublepage\clearpage
         
