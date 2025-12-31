@@ -1,6 +1,6 @@
 const { GoogleGenerativeAI } = require("@google/generative-ai");
-const { cleanLLMOutput } = require("../utils/clean");
-const { buildPrompt } = require("../utils/prompts");
+const { cleanLLMOutput } = require("../utils/cleanLLMOutput");
+const { buildPrompt } = require("../utils/buildPrompts");
 
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 

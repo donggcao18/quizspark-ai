@@ -1,0 +1,48 @@
+{
+  "success": true,
+  "totalQuestions": 5,
+  "questions": [
+    {
+      "description": "Choose the sentence that correctly uses the present perfect tense.",
+      "choices": [
+        "I have saw that movie already.",
+        "She has took the exam twice.",
+        "They have lived in London for five years.",
+        "We have eaten dinner an hour ago."
+      ],
+      "question_type": "multiple_choice",
+      "explanation": "The present perfect tense is formed with 'have' or 'has' plus the past participle of the main verb. It is used for actions that started in the past and continue to the present, or actions completed at an unspecified time in the past with relevance to the present. 'They have lived in London for five years' correctly uses 'have lived' and indicates a duration up to the present.",
+      "answer": {
+        "index": 2
+      }
+    },
+    {
+      "description": "Choose the sentence where the verb tense is used appropriately for the given context.",
+      "choices": [
+        "I have visited Paris last year.",
+        "She has studied French since 2010.",
+        "They just finished their project a moment ago.",
+        "He have never gone to the beach before."
+      ],
+      "question_type": "multiple_choice",
+      "explanation": "The present perfect tense is used for actions that began in the past and continue to the present, or actions completed at an unspecified time in the past with relevance to the present. 'Since 2010' correctly indicates a duration that started in the past and continues, making 'has studied' the appropriate choice. 'Last year' and 'a moment ago' typically require the simple past tense.",
+      "answer": {
+        "index": 1
+      }
+    },
+    {
+      "description": "Identify the sentence with correct subject-verb agreement.",
+      "choices": [
+        "The manager, along with his assistants, are arriving soon.",
+        "Neither the students nor the teacher were ready.",
+        "The news today is surprisingly good.",
+        "Mathematics are a challenging subject for many."
+      ],
+      "question_type": "multiple_choice",
+      "explanation": "Certain nouns ending in -s, such as 'news,' 'mathematics,' 'physics,' 'politics,' are singular in meaning and require a singular verb. Therefore, 'The news today is surprisingly good' is correct. In option A, 'the manager' is the singular subject. In option B, with 'neither...nor,' the verb agrees with the noun closer to it ('teacher' is singular, so 'was'). In option D, 'Mathematics' is treated as singular.",
+      "answer": {
+        "index": 2
+      }
+    }
+  ]
+}

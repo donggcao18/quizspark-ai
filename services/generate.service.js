@@ -1,7 +1,7 @@
 const { GoogleGenerativeAI } = require('@google/generative-ai');
-const { readFileContent } = require("../utils/file");
-const { buildPrompt } = require("../utils/prompts");
-const { cleanLLMOutput } = require("../utils/clean");
+const { readFileContent } = require("../utils/processingFile");
+const { buildPrompt } = require("../utils/buildPrompts");
+const { cleanLLMOutput } = require("../utils/cleanLLMOutput");
 require('dotenv').config();
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 console.log(genAI)
