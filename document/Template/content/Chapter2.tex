@@ -1,35 +1,435 @@
 \chapter{Requirements Analysis}
-% Requirement analysis and system overview
 
 \section{Current System Analysis}
-% Analysis of existing systems and practices
 
 \subsection{User and Stakeholder Survey}
 % Findings from users and stakeholders
+Analyzing stakeholders is essential to ensure that \textbf{QuizSpark} effectively meets the needs of all user groups and system operators.
+
+\begin{table}[h]
+\centering
+\label{tab:stakeholder}
+\begin{tabular}{|p{3cm}|p{5cm}|p{5cm}|}
+\hline
+\textbf{Stakeholder} & \textbf{Role / Objective} & \textbf{Main Needs} \\
+\hline
+Students / Learners & Primary users of the system. Their goal is to improve academic performance through personalized learning paths. & Take adaptive quizzes, track detailed learning progress, and receive study suggestions based on weaknesses.\\
+\hline
+Teachers / Tutors & Content creators and managers. Their goal is to enhance teaching and assessment effectiveness. & Manage classes, create high-quality exams, and view student statistics and class performance analytics.\\
+\hline
+Developers & Build and deploy system features. Their goal is performance and reliability. & Design scalable, maintainable code and integrate AI/ML technologies.\\
+\hline
+System Administrators (Admins) & Manage users and content across the platform. Their goal is safety and compliance. & Moderate content, secure user data, and monitor system performance and stability.\\
+\hline
+Advertising Partners & Provide revenue for the platform. Their goal is to reach appropriate target audiences. & Implement contextual advertising mechanisms suitable for students, ensuring ads are non-intrusive and do not disrupt the learning experience.\\
+\hline
+\end{tabular}
+\end{table}
+So, the need of \textbf{Students} (Adaptive Testing, Detailed Progress Tracking) are central, directly influencing Objective 1.3. The needs of \textbf{Teachers} (Content Creation, Analytics) determine the usefulness of the tool in real educational environments.
 
 \subsection{Review of Existing Systems}
-% Analysis of similar or existing systems
+To better understand the context and identify gaps in current learning platforms, several popular online assessment systems were reviewed, including \textbf{Quizizz}, \textbf{Azota}, and \textbf{Google Forms}. These systems are widely used in educational environments and provide a solid baseline for comparison.
+
+\begin{itemize}
+    \item \textbf{Quizizz:} Provides an engaging, gamified quiz experience with real-time participation and leaderboards. However, it mainly focuses on entertainment and lacks advanced personalization mechanisms or deep learning analytics.
+    
+    \item \textbf{Azota:} Commonly used for online exams and homework management. While it supports automatic grading and exam organization, it offers limited adaptive learning features and minimal post-quiz feedback beyond scores.
+    
+    \item \textbf{Google Forms:} A flexible tool for creating quizzes and surveys. Despite its simplicity and ease of use, it does not support real-time competition, adaptive difficulty, or intelligent feedback for learners.
+\end{itemize}
+
+Based on this review, existing systems primarily emphasize quiz delivery and basic assessment, but they do not adequately support adaptive learning, personalized feedback, or intelligent content generation. These limitations highlight the need for a more learner-centered and intelligent assessment platform.
 
 \subsection{Key Features to Be Developed}
-% Core system functionalities
+Based on the stakeholder survey and the review of existing systems, the following core features are identified as essential for the QuizSpark system:
+
+\begin{itemize}
+    \item \textbf{Adaptive Quiz Mechanism:} Automatically adjust question difficulty based on learner performance to provide personalized learning paths.
+    
+    \item \textbf{AI-based Question Generation:} Support teachers and students by automatically generating high-quality questions based on topic, difficulty level, and format.
+    
+    \item \textbf{Detailed Learning Analytics:} Provide in-depth feedback, including performance analysis by topic, common mistakes, and progress over time.
+    
+    \item \textbf{Real-time Competitive Quizzes:} Enable live quiz sessions with leaderboards to enhance motivation and engagement among students.
+    
+    \item \textbf{Multi-platform Accessibility:} Ensure seamless access across web and mobile platforms with synchronized data.
+    
+    \item \textbf{Content Management and Moderation:} Allow administrators to manage users and moderate content to maintain quality and system reliability.
+\end{itemize}
+
+These features collectively aim to address the shortcomings of existing systems while fulfilling the learning needs of students and instructional requirements of teachers.
+
 
 \section{Functional Overview}
 % High-level functional description
 
 \subsection{Overall Use Case Diagram}
-% System-wide use case overview
+The selected use cases reflect practical interactions in QuizSpark. Students participate in quizzes, join live sessions, submit answers, and track progress. Teachers create and manage quizzes, evaluate question quality, host sessions, manage classes, and analyze performance. AI features support both Students and Teachers by generating questions and recommending personalized quizzes, enabling efficient content creation and adaptive learning.
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=\textwidth]{images/UseCase.png}
+    \caption{Overall Use Case Diagram of the QuizSpark System}
+    \label{fig:usecase_overall}
+\end{figure}
+
 
 \subsection{Detailed Use Case Diagrams}
 % Decomposed use case diagrams
 
-\subsection{Functional Specifications (Detailed Use Cases)}
-% Detailed use case specifications (explain in text)
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{images/stuUC}
+    \caption{Detailed Student Use Case Diagram}
+    \label{fig:stuUC}
+\end{figure}
 
-\subsubsection{Use Case UC001}
-\subsubsection{Use Case UC002}
-\subsubsection{Use Case UC003}
-\subsubsection{Use Case UC004}
-\subsubsection{Use Case UC005}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{images/tcUC}
+    \caption{Detailed Teacher Use Case Diagram}
+    \label{fig:tcUC}
+\end{figure}
+
+\subsection{Functional Specifications (Detailed Use Case Specifications)}
+
+% --- GENERAL FUNCTIONS ---
+\subsubsection{General Functions (Code: FR-G)}
+
+\paragraph{FR-G01: Login / Register}
+This service allows users (Students and Teachers) to access the QuizSpark system using registered credentials or by creating a new account.
+
+\begin{table}[H]
+\centering
+\begin{tabular}{|p{3cm}|p{13cm}|}
+\hline
+\textbf{Component} & \textbf{Content} \\
+\hline
+Requirements & The system must provide an interface for authentication and new account registration. \\ 
+\hline
+Code & FR-G01 \\
+\hline
+Main Actor & Student, Teacher \\
+\hline
+Goal & To provide secure access to the system. \\
+\hline
+Precondition & Device is connected to the Internet. \\
+\hline
+Postcondition & User is authenticated and redirected to their personal Dashboard. \\
+\hline
+Main Flow & \vspace{-0.3cm}
+\begin{enumerate}[nosep, leftmargin=*]
+    \item User accesses the homepage and selects "Login" or "Register".
+    \item For Login: User enters Email/Username and Password. The system validates the data.
+    \item For Registration: User enters personal details, selects a role, and sets a password.
+    \item The system encrypts the information, saves it to the database, and sends a success notification.
+    \item User is automatically logged into the system.
+\end{enumerate} \\
+\hline
+Alternative Flow & \vspace{-0.3cm}
+\begin{itemize}[nosep, leftmargin=*]
+    \item \textbf{2a: Invalid credentials:} System displays "Invalid credentials" error and prompts for re-entry.
+    \item \textbf{3a: Email already exists:} System requests the user to use a different email or recover the password.
+\end{itemize} \\
+\hline
+\end{tabular}
+\end{table}
+
+\paragraph{FR-G02: Manage Profile}
+Allows users to manage personal information, update profile pictures, and change passwords periodically.
+
+\begin{table}[H]
+\centering
+\begin{tabular}{|p{3cm}|p{13cm}|}
+\hline
+\textbf{Component} & \textbf{Content} \\
+\hline
+Requirements & Allow viewing and editing of basic personal profile fields. \\ 
+\hline
+Code & FR-G02 \\
+\hline
+Main Actor & Student, Teacher \\
+\hline
+Goal & To maintain accurate user information on the system. \\
+\hline
+Precondition & User is successfully logged in. \\
+\hline
+Postcondition & New information is updated in the database. \\
+\hline
+Main Flow & \vspace{-0.3cm}
+\begin{enumerate}[nosep, leftmargin=*]
+    \item User navigates to the "Profile Settings" section.
+    \item User edits desired fields (Display Name, Avatar, Bio, etc.).
+    \item User clicks "Save Changes".
+    \item The system validates the data integrity and updates the database.
+    \item A success notification is displayed.
+\end{enumerate} \\
+\hline
+\end{tabular}
+\end{table}
+
+% --- STUDENT FUNCTIONS ---
+\subsubsection{Student Functions (Code: FR-U)}
+
+\paragraph{FR-U01: Take Practice Quiz}
+Allows students to practice independently with available question sets to reinforce knowledge.
+
+\begin{table}[H]
+\centering
+\begin{tabular}{|p{3cm}|p{13cm}|}
+\hline
+\textbf{Component} & \textbf{Content} \\
+\hline
+Requirements & Display the list of questions, record answers, and provide instant scoring. \\ 
+\hline
+Code & FR-U01 \\
+\hline
+Main Actor & Student \\
+\hline
+Goal & To self-assess personal capacity through sample tests. \\
+\hline
+Precondition & Student is logged in. \\
+\hline
+Postcondition & Quiz results are saved in the student's learning history. \\
+\hline
+Main Flow & \vspace{-0.3cm}
+\begin{enumerate}[nosep, leftmargin=*]
+    \item Student searches for or selects a quiz set from the library.
+    \item Student clicks "Start Quiz".
+    \item System displays each question along with options (FR-U01.1).
+    \item Student completes the questions and clicks "Submit".
+    \item System cross-checks answers and displays the final score (FR-U02).
+\end{enumerate} \\
+\hline
+\end{tabular}
+\end{table}
+
+\paragraph{FR-U02: Submit \& View Results}
+The system automatically grades the quiz and provides detailed feedback to the student.
+
+\begin{table}[H]
+\centering
+\begin{tabular}{|p{3cm}|p{13cm}|}
+\hline
+\textbf{Component} & \textbf{Content} \\
+\hline
+Requirements & Calculate scores based on question weights and provide answer explanations. \\ 
+\hline
+Code & FR-U02 \\
+\hline
+Main Actor & Student \\
+\hline
+Goal & To receive evaluation results immediately after completing the test. \\
+\hline
+Precondition & Currently taking a quiz (FR-U01) or participating in a Live Session. \\
+\hline
+Postcondition & A result report is generated and stored. \\
+\hline
+Main Flow & \vspace{-0.3cm}
+\begin{enumerate}[nosep, leftmargin=*]
+    \item System receives answer data when the user clicks "Submit".
+    \item Grading algorithm matches answers with the key and calculates the total score.
+    \item System displays the result screen: Score, correct/incorrect count, and completion time.
+    \item Student is allowed to review detailed questions and explanations.
+\end{enumerate} \\
+\hline
+\end{tabular}
+\end{table}
+
+\paragraph{FR-U03: Join Live Session}
+Participate in real-time quiz sessions organized by teachers.
+
+\begin{table}[H]
+\centering
+\begin{tabular}{|p{3cm}|p{13cm}|}
+\hline
+\textbf{Component} & \textbf{Content} \\
+\hline
+Requirements & Synchronized connection between teacher and student screens via WebSockets. \\ 
+\hline
+Code & FR-U03 \\
+\hline
+Main Actor & Student \\
+\hline
+Goal & To interact directly and compete with classmates in real-time. \\
+\hline
+Precondition & Student has a Game PIN or an access link provided by the Teacher. \\
+\hline
+Postcondition & Student's name appears on the class Leaderboard. \\
+\hline
+Main Flow & \vspace{-0.3cm}
+\begin{enumerate}[nosep, leftmargin=*]
+    \item Student enters the provided Game PIN.
+    \item Student waits in the "Waiting Room" until the Teacher clicks Start.
+    \item Student answers questions appearing on the screen within the time limit.
+    \item Student views their personal rank on the leaderboard after each question.
+\end{enumerate} \\
+\hline
+\end{tabular}
+\end{table}
+
+\paragraph{FR-U04: AI Learning Recommendations}
+Uses Artificial Intelligence to suggest learning paths and quiz sets tailored to the student's ability.
+
+\begin{table}[H]
+\centering
+\begin{tabular}{|p{3cm}|p{13cm}|}
+\hline
+\textbf{Component} & \textbf{Content} \\
+\hline
+Requirements & Analyze historical quiz data to identify knowledge gaps. \\ 
+\hline
+Code & FR-U04 \\
+\hline
+Main Actor & Student \\
+\hline
+Goal & To personalize the learning experience and improve weak areas. \\
+\hline
+Precondition & At least 3 quiz attempts are recorded in history. \\
+\hline
+Postcondition & A list of recommendations is updated on the Dashboard. \\
+\hline
+Main Flow & \vspace{-0.3cm}
+\begin{enumerate}[nosep, leftmargin=*]
+    \item AI system scans quiz history and identifies topics with high error rates.
+    \item AI calculates the student's current proficiency level.
+    \item AI generates suggestions: "Topics to Improve", "Recommended for You".
+    \item Student selects and participates based on the suggestions.
+\end{enumerate} \\
+\hline
+\end{tabular}
+\end{table}
+
+% --- TEACHER FUNCTIONS ---
+\subsubsection{Teacher Functions (Code: FR-T)}
+
+\paragraph{FR-T01: Create \& Manage Quizzes}
+Provides tools to author various question types (Multiple choice, Essay, Matching).
+
+\begin{table}[H]
+\centering
+\begin{tabular}{|p{3cm}|p{13cm}|}
+\hline
+\textbf{Component} & \textbf{Content} \\
+\hline
+Requirements & Intuitive editor supporting image attachments and mathematical formulas. \\ 
+\hline
+Code & FR-T01 \\
+\hline
+Main Actor & Teacher \\
+\hline
+Goal & To build a digital learning resource repository for teaching. \\
+\hline
+Precondition & Teacher is logged in. \\
+\hline
+Postcondition & Quiz is published and can be shared publicly or internally. \\
+\hline
+Main Flow & \vspace{-0.3cm}
+\begin{enumerate}[nosep, leftmargin=*]
+    \item Teacher selects "Create New Quiz".
+    \item Teacher sets general info (Title, Description, Subject, Time limit).
+    \item Teacher adds questions manually or uses AI suggestions (FR-T04).
+    \item Teacher sets correct answers and point weights.
+    \item Teacher clicks "Publish" to finalize.
+\end{enumerate} \\
+\hline
+\end{tabular}
+\end{table}
+
+\paragraph{FR-T02: Manage Classes \& Students}
+Organize students into classes for easy assignment distribution and progress tracking.
+
+\begin{table}[H]
+\centering
+\begin{tabular}{|p{3cm}|p{13cm}|}
+\hline
+\textbf{Component} & \textbf{Content} \\
+\hline
+Requirements & Management of class lists, Class Codes, and join invitations. \\ 
+\hline
+Code & FR-T02 \\
+\hline
+Main Actor & Teacher \\
+\hline
+Goal & Centralized management of student data by class unit. \\
+\hline
+Precondition & Teacher has a list of student emails or identifiers. \\
+\hline
+Postcondition & Class structure is established on the system. \\
+\hline
+Main Flow & \vspace{-0.3cm}
+\begin{enumerate}[nosep, leftmargin=*]
+    \item Teacher creates a new class and names it.
+    \item System generates a unique "Class Code".
+    \item Teacher sends the code to students or adds them manually via email.
+    \item Teacher approves student join requests.
+\end{enumerate} \\
+\hline
+\end{tabular}
+\end{table}
+
+\paragraph{FR-T03: View Class Analytics}
+Provides visual statistical reports on the learning outcomes of the entire class and individuals.
+
+\begin{table}[H]
+\centering
+\begin{tabular}{|p{3cm}|p{13cm}|}
+\hline
+\textbf{Component} & \textbf{Content} \\
+\hline
+Requirements & Bar/Pie charts showing score distribution and correct answer rates per question. \\ 
+\hline
+Code & FR-T03 \\
+\hline
+Main Actor & Teacher \\
+\hline
+Goal & To evaluate teaching effectiveness and student learning outcomes. \\
+\hline
+Precondition & The class has completed at least one quiz. \\
+\hline
+Postcondition & Analytical dashboards are available; data can be exported to PDF/Excel. \\
+\hline
+Main Flow & \vspace{-0.3cm}
+\begin{enumerate}[nosep, leftmargin=*]
+    \item Teacher selects a specific class and quiz.
+    \item System aggregates data and displays analysis charts.
+    \item Teacher reviews "difficult questions" (high error rates).
+    \item Teacher views detailed reports for individual students to provide support.
+\end{enumerate} \\
+\hline
+\end{tabular}
+\end{table}
+
+\paragraph{FR-T04: AI-Assisted Question Generation}
+Integrates Generative AI to help teachers quickly draft quizzes from text or topics.
+
+\begin{table}[H]
+\centering
+\begin{tabular}{|p{3cm}|p{13cm}|}
+\hline
+\textbf{Component} & \textbf{Content} \\
+\hline
+Requirements & Ability to extract questions from uploaded documents or keywords. \\ 
+\hline
+Code & FR-T04 \\
+\hline
+Main Actor & Teacher \\
+\hline
+Goal & To save preparation time and diversify the question bank. \\
+\hline
+Precondition & Teacher is in the quiz creation interface (FR-T01). \\
+\hline
+Postcondition & AI-suggested questions are added to the quiz draft. \\
+\hline
+Main Flow & \vspace{-0.3cm}
+\begin{enumerate}[nosep, leftmargin=*]
+    \item Teacher uploads a document (PDF/Docx) or enters a topic.
+    \item Teacher selects the number of questions and difficulty level.
+    \item AI generates a list of questions with answers.
+    \item Teacher reviews, edits, and confirms the questions for the official quiz.
+\end{enumerate} \\
+\hline
+\end{tabular}
+\end{table}
 
 \section{Business Process Modeling}
 % Workflow and activity diagrams
