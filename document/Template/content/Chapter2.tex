@@ -430,16 +430,134 @@ Main Flow & \vspace{-0.3cm}
 \hline
 \end{tabular}
 \end{table}
-
 \section{Business Process Modeling}
-% Workflow and activity diagrams
-%Sequence/ Activity diagrams if applicable
+
+This section presents the main business processes of the QuizSpark system using activity diagrams, complemented by selected sequence diagrams. The activity diagrams provide a high-level view of workflows from the perspective of primary actors, while the sequence diagrams enrich these workflows by clarifying interaction order and responsibility distribution among system components.
+
+\subsection{Student Workflow}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.6\textwidth]{images/stuAc}
+\caption{Student Workflow Activity Diagram}
+\label{fig:student_workflow}
+\end{figure}
+
+The student workflow captures the overall learning-oriented behavior, including quiz participation, answer submission, and progress review. This abstraction focuses on typical interaction patterns rather than individual feature execution, allowing both practice and live quiz scenarios to be represented within a single coherent process.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.75\textwidth]{images/seq1}
+\caption{Sequence Diagram – Student Joining and Taking a Quiz}
+\label{fig:seq_student_take_quiz}
+\end{figure}
+
+This sequence diagram complements the activity workflow by detailing the interaction flow when a student joins a quiz and submits answers, highlighting coordination between the user interface, quiz handling logic, and session services.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.75\textwidth]{images/seq2}
+\caption{Sequence Diagram – Student Submitting Quiz and Viewing Results}
+\label{fig:seq_student_results}
+\end{figure}
+
+The second sequence diagram refines the outcome phase of the workflow by illustrating how quiz submission triggers scoring, analytics processing, and AI-based recommendations, supporting progress tracking and personalized learning feedback.
+
+\subsection{Teacher Workflow}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.6\textwidth]{images/tcAc}
+\caption{Teacher Workflow Activity Diagram}
+\label{fig:teacher_workflow}
+\end{figure}
+
+The teacher workflow models instructional processes such as quiz preparation, optional AI-assisted support, session hosting, and performance evaluation. The emphasis is placed on decision points and optional paths rather than low-level operational details.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.75\textwidth]{images/seq3}
+\caption{Sequence Diagram – Teacher Creating and Managing Quizzes}
+\label{fig:seq_teacher_create_quiz}
+\end{figure}
+
+This sequence diagram provides additional insight into quiz creation and management, clarifying how AI-based question generation is integrated as a supporting service within the teacher workflow.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.75\textwidth]{images/seq4}
+\caption{Sequence Diagram – Teacher Hosting a Live Quiz Session}
+\label{fig:seq_teacher_host_session}
+\end{figure}
+
+The final sequence diagram complements the live session phase by illustrating interactions during quiz hosting, student participation, and real-time response handling, reinforcing the dynamic aspects of classroom-oriented activities.
 
 
 \section{Non-Functional Requirements}
 % System quality attributes
 
 \subsection{Performance}
+
+The performance requirements define the expected responsiveness and scalability of the system.
+
+\begin{table}[H]
+\centering
+\begin{tabular}{|p{3cm}|p{7cm}|p{4cm}|}
+\hline
+\textbf{ID} & \textbf{Requirement} & \textbf{Metric / Constraint} \\
+\hline
+NFR-P01 & The system shall respond to user actions within an acceptable time. & Response time $\leq$ 2 seconds \\
+\hline
+NFR-P02 & The system shall support concurrent users during live quiz sessions. & $\geq$ 100 concurrent users \\
+\hline
+\end{tabular}
+\end{table}
 \subsection{Security}
+
+Security requirements ensure the protection of user data and system integrity.
+
+\begin{table}[H]
+\centering
+\begin{tabular}{|p{3cm}|p{7cm}|p{4cm}|}
+\hline
+\textbf{ID} & \textbf{Requirement} & \textbf{Constraint} \\
+\hline
+NFR-S01 & User authentication shall be required for accessing protected features. & Role-based access control \\
+\hline
+NFR-S02 & Sensitive user data shall be securely stored and transmitted. & Encrypted communication (HTTPS) \\
+\hline
+\end{tabular}
+\end{table}
 \subsection{Usability}
+
+Usability requirements focus on ease of use and learning experience.
+
+\begin{table}[H]
+\centering
+\begin{tabular}{|p{3cm}|p{7cm}|p{4cm}|}
+\hline
+\textbf{ID} & \textbf{Requirement} & \textbf{Evaluation Criteria} \\
+\hline
+NFR-U01 & The system shall provide an intuitive user interface. & Basic tasks completed without training \\
+\hline
+NFR-U02 & The system shall provide clear feedback during quiz participation. & Immediate visual or textual feedback \\
+\hline
+\end{tabular}
+\end{table}
+
 \subsection{Maintainability}
+
+Maintainability requirements describe how easily the system can be modified and extended.
+
+\begin{table}[H]
+\centering
+\begin{tabular}{|p{3cm}|p{7cm}|p{4cm}|}
+\hline
+\textbf{ID} & \textbf{Requirement} & \textbf{Design Constraint} \\
+\hline
+NFR-M01 & The system shall be modular and loosely coupled. & Layered architecture \\
+\hline
+NFR-M02 & The system shall support future feature extensions. & Well-defined APIs and documentation \\
+\hline
+\end{tabular}
+\end{table}
