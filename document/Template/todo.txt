@@ -1,0 +1,12 @@
+chapter 1,3,6: dong
+Chapter 2; viet
+
+Chapter 4:
+* Pkg diagram: hieu
+* Component diagram: long
+* design priciple: phong
+* database: dong
+
+Code
+* mock UI for teacher UC: phong (hieu sp)
+* testing planning: long
