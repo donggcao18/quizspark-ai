@@ -1,12 +1,8 @@
-chapter 1,3,6: dong
-Chapter 2; viet
+Viet: Chap 1 + Chap 6 + Support Testing
+Phong: Testing
+Dong: Section 4.2 + 5.2 + database diagram
+Hieu: package diagram
+Long: Overall Assesment
 
-Chapter 4:
-* Pkg diagram: hieu
-* Component diagram: long
-* design priciple: phong
-* database: dong
 
-Code
-* mock UI for teacher UC: phong (hieu sp)
-* testing planning: long
+
