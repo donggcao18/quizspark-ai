@@ -5,23 +5,68 @@
 % Overall architecture
 
 \subsection{Architectural Style}
-% MVC model
+The application is designed using a robust Client-Server architecture, ensuring clear separation of concerns, scalability, and maintainability. This architecture divides the system into two main components: the Front-End (Client) and the Back-End (Server), communicating over a network.
+
+\begin{itemize}
+    \item \textbf{Single Page Application (SPA)}: The user interface is implemented as a Single Page Application using React.js. In this model, the browser loads a single HTML page and dynamically updates the content as the user interacts with the app, without requiring full page reloads. This provides a fluid and responsive user experience similar to a desktop application.
+    \item \textbf{RESTful API}: The backend, built with Spring Boot, exposes a set of RESTful (Representational State Transfer) endpoints. These endpoints handle client requests, process business logic, and return data in usually JSON format. The API is stateless, meaning each request from the client must contain all the information needed to understand and process the request.
+    \item \textbf{Model-View-Controller (MVC)}: The backend adheres to the MVC design pattern, although adapted for an API-centric architecture. 
+    \begin{itemize}
+        \item \textbf{Model}: Represents the data structure and business rules (JPA Entities and DTOs).
+        \item \textbf{View}: In this architecture, the traditional "View" rendering is offloaded to the React frontend. The backend implementation of the view is essentially the JSON serialization of the models.
+        \item \textbf{Controller}: Handles incoming HTTP requests, invokes the appropriate business logic (Services), and returns the appropriate HTTP responses.
+    \end{itemize}
+\end{itemize}
 
 \subsection{High-Level Design}
-% Package and dependency diagrams
+The high-level design of the system illustrates how the various components interact with each other to fulfill the user's requests. The architecture is stratified into standard logical layers, which promotes separation of concerns and maintainability.
+
+\begin{figure}[htbp]
+    \centering
+    \fbox{\begin{minipage}{0.6\textwidth}
+        \centering
+        \vspace{2cm}
+        [Place High-Level Architecture Diagram Here]
+        \vspace{2cm}
+    \end{minipage}}
+    \caption{High-Level System Architecture}
+    \label{fig:high_level_arch}
+\end{figure}
+
+The system is organized into the following layers:
+
+\begin{itemize}
+    \item \textbf{Presentation Layer}: Built with React, this layer runs in the user's browser. It is responsible for rendering the UI, capturing user input, and communicating with the backend via REST APIs. It handles client-side routing and state management.
+    \item \textbf{Controller Layer}: Implemented using Spring MVC, this layer intercepts incoming HTTP requests. It validates the request data and delegates the execution to the Service layer. It is also responsible for serializing the response back to the client.
+    \item \textbf{Service Layer}: This layer encapsulates the core business logic of the application. It orchestrates complex operations, such as generating quizzes using AI, calculating scores, and managing user content. It acts as a bridge between the Controller and the Data Access layers.
+    \item \textbf{Data Access Layer (DAO)}: Utilizing Spring Data JPA, this layer abstracts the database interactions. It provides a set of interfaces to perform CRUD (Create, Read, Update, Delete) operations on the database entities without writing boilerplate SQL code.
+    \item \textbf{Database Persistence}: The data is persistently stored in a PostgreSQL database. It holds the schema for users, quizzes, questions, and other application data.
+\end{itemize}
 
 \subsection{Component Design}
-% Component interactions (can add component diagrams)
+The application is composed of several key components that work together to provide the desired functionality.
 
-\section{Detailed Design}
-% UI and database design
+\textbf{Frontend Components (React)}
+The frontend is structured into modular feature-based components:
 
-\subsection{User Interface Design}
-% UI standards and layouts
+\begin{itemize}
+    \item \textbf{Routing Module}: Orchestrates the navigation logic of the application, mapping URL paths to specific page components and managing the overall layout structure.
+    \item \textbf{Auth Module}: Securitizes the application by managing user identity, handling authentication flows (login, registration), and maintaining session state.
+    \item \textbf{Practice \& Quiz Module}: Manages the end-to-end assessment process, from discovering quizzes to taking them and reviewing performance.
+    \item \textbf{Classroom Module}: Facilitates collaborative learning by grouping users into classrooms where they can share resources and track progress.
+    \item \textbf{Workspace Module}: Provides a comprehensive environment for studying and content creation, integrating document viewing with note-taking and management tools.
+    \item \textbf{AI Module}: Powers the intelligent features of the application, including the chatbot assistant, automated quiz generation, and content parsing.
+\end{itemize}
 
-\subsection{Database Design}
-% Logical and physical database design
+\textbf{Backend Components (Spring Boot)}
+The backend is organized into functional modules that encapsulate the business logic and service orchestration:
 
-\subsubsection{Entity Definitions}
-\subsubsection{Database Schema}
-\subsubsection{Entity--Relationship Diagram}
+\begin{itemize}
+    \item \textbf{Security \& Auth Module}: Secures the system by managing user identities, handling robust authentication flows (JWT), and enforcing granular access control policies across all API endpoints.
+    \item \textbf{Classroom Module}: Orchestrates the logic of collaborative learning, facilitating the creation of classrooms, member management, and role-based resource sharing among users.
+    \item \textbf{Practice \& Assessment Module}: Manages the end-to-end evaluation process, including practice session state tracking, real-time answer evaluation, and performance metric calculations.
+    \item \textbf{Knowledge Base Module}: Provides a comprehensive infrastructure for organizing educational content, encompassing question banks, hierarchical tagging systems, and content interaction histories.
+    \item \textbf{AI Intelligence Module}: Powers the intelligent features of the application, including dynamic question generation, natural language chat assistance, and automated content parsing.
+    \item \textbf{File \& Document Module}: Facilitates the ingestion and analysis of external materials, primarily PDF documents, enabling text extraction and the conversion of static content into interactive study tools.
+\end{itemize}
+

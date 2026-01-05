@@ -1,5 +1,66 @@
 \chapter{Technologies Used}
-% Description and justification of technologies
+\label{chap:technologies}
 
-\section{ Database Management System}
-% Database technology
+This chapter details the technological stack and development tools employed in the construction of the QuizSpark platform. The selection of these technologies was driven by the need for a modern, scalable, and maintainable architecture that can support real-time interaction and AI-driven features.
+
+\section{Overview}
+The application follows a standard Client-Server architecture. The frontend is a Single Page Application (SPA) that communicates with a RESTful backend API. The system leverages cloud-based database services and AI integration to deliver a robust learning experience.
+
+\section{Frontend Technologies}
+The user interface is built using a modern React-based stack, ensuring high performance and a responsive user experience.
+
+\subsection{Core Framework}
+\begin{itemize}
+    \item \textbf{React.js}: The core library for building the user interface, utilizing a component-based architecture for reusability and state management.
+    \item \textbf{Vite}: Employed as the build tool and development server, offering significantly faster hot module replacement (HMR) and build times compared to traditional bundlers.
+\end{itemize}
+
+\subsection{Styling and UI Components}
+\begin{itemize}
+    \item \textbf{Tailwind CSS}: A utility-first CSS framework that enables rapid UI development with consistent design tokens.
+    \item \textbf{Radix UI / Shadcn}: Used for accessible, unstyled primitives to build complex interactive components like dialogs, dropdowns, and navigation menus.
+    \item \textbf{Lucide React}: Provides a comprehensive set of consistent and reliable icons.
+\end{itemize}
+
+\subsection{Supporting Libraries}
+\begin{itemize}
+    \item \textbf{React Router}: Manages client-side routing, allowing for seamless navigation without page reloads.
+    \item \textbf{Axios}: A promise-based HTTP client used for handling asynchronous API requests to the backend.
+    \item \textbf{Firebase SDK}: integrated for secure client-side authentication flows.
+\end{itemize}
+
+\section{Backend Technologies}
+The server-side logic is implemented in Java, leveraging the robust Spring ecosystem to ensure scalability and security.
+
+\subsection{Core Framework}
+\begin{itemize}
+    \item \textbf{Java 17}: The primary programming language, chosen for its stability, strong typing, and vast ecosystem.
+    \item \textbf{Spring Boot 3.5.6}: The foundational framework that simplifies the bootstrapping and development of the application.
+    \item \textbf{Spring Security}: Provides authentication and access control frameworks to secure the application endpoints.
+    \item \textbf{Spring Data JPA}: detailed abstraction over the data access layer, simplifying database interactions.
+\end{itemize}
+
+\subsection{AI and Processing}
+\begin{itemize}
+    \item \textbf{Spring AI}: Facilitates the integration of AI capabilities, specifically connecting to the OpenAI API for generating quiz content and explanations.
+    \item \textbf{Apache PDFBox}: Used for processing and extracting text from PDF documents uploaded by users, serving as context for AI generation.
+\end{itemize}
+
+\section{Database Management System}
+The application utilizes a relational database model to ensure data integrity and complex querying capabilities.
+
+\begin{itemize}
+    \item \textbf{PostgreSQL}: The primary production database, known for its advanced features, reliability, and robust performance.
+    \item \textbf{Supabase}: Used as the managed database provider, offering a hosted PostgreSQL instance along with built-in real-time capabilities.
+    \item \textbf{H2 Database}: An in-memory database used purely for testing and development purposes to ensure rapid iteration cycles without affecting the persistent data store.
+\end{itemize}
+
+\section{Development environment and Tools}
+Several tools were utilized to streamline the development lifecycle and ensure code quality.
+
+\begin{itemize}
+    \item \textbf{Gradle}: The build automation tool used for dependency management and packaging the Java backend.
+    \item \textbf{Docker}: Used for containerization to ensure consistency across different development and deployment environments.
+    \item \textbf{Git \& GitHub}: Version control system and platform for source code management and collaboration.
+    \item \textbf{Lombok}: A Java library that automatically plugs into the editor and build tools to reduce boilerplate code, such as getters, setters, and constructors.
+\end{itemize}

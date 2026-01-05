@@ -5,14 +5,268 @@
 % Tools, libraries, and setup
 
 \section{Implementation Details}
-% Core implementation aspects
+This section details the internal working mechanisms of the system, structured by architectural layers.
 
+\subsection{Frontend}
+The frontend architecture is modular, with specialized components handling distinct functional areas:
+
+\subsubsection{Routing Implementation}
+The \textbf{Routing Module}, defined in \texttt{App.tsx}, acts as the central nervous system of the application, mapping URL paths to specific React components. It utilizes \texttt{React Router} to organize the application into three distinct access layers, ensuring a secure and logical navigation flow.
+
+\textbf{Navigation Tree Structure}:
+\begin{itemize}
+    \item \textbf{Public Routes}: Accessible to all visitors, these include the \texttt{LandingPage}, \texttt{QuestionBankPage}, and \texttt{AboutPage}. They are wrapped in a shared layout providing the public header and footer.
+    \item \textbf{Anonymous Routes}: Restricted to non-authenticated users (e.g., \texttt{/login}, \texttt{/signup}). The \texttt{AnonymousRoute} component automatically redirects logged-in users to their dashboard, preventing redundant access to auth pages.
+    \item \textbf{Protected Routes}: These require a valid session. The \texttt{ProtectedRoute} wrapper guards critical areas such as the \texttt{HomePage} (Dashboard), \texttt{WorkspacePage}, and \texttt{BankEditPage}. If an unauthenticated user attempts to access these, they are immediately redirected to the login page.
+\end{itemize}
+
+\textbf{Role-Based Access Control (RBAC)}:
+
+To further refine security, the application implements granular permission checks via the \texttt{RoleProtectedRoute} component. This wrapper intercepts navigation attempts to sensitive areas. For instance, the \texttt{/home/classrooms} route is explicitly restricted to users with \texttt{ROLE\_TEACHER} or \texttt{ROLE\_ADMIN}. If a student attempts to access this route, the system evaluates their role against the allowed list and redirects them to the generic home page if they lack the necessary privileges.
+
+\begin{figure}[htbp]
+    \centering
+    \fbox{\begin{minipage}{0.8\textwidth}
+        \centering
+        \vspace{2cm}
+        [Place Navigation Wireframe Diagram Here]
+        \vspace{2cm}
+    \end{minipage}}
+    \caption{Navigation Wireframe Diagram}
+    \label{fig:nav_wireframe}
+\end{figure}
+
+The diagram above visually represents the application's navigation flow. It highlights the segregation between the Public Zone (Landing, About), the Authentication Zone (Login, Signup), and the Protected Zone (Dashboard, Workspace), illustrating how the routing guards enforce access control at each transition point.
+
+\subsubsection{Authentication Flow}
+The \textbf{Auth Module} secures the application through a hybrid approach combining Firebase Authentication for identity verification and a Spring Boot backend for role management.
+
+\textbf{Token Management}:
+Secure communication is enforced via the \texttt{api.ts} module. It utilizes an Axios interceptor to automatically attach the user's JWT to every outgoing HTTP request. Before a request is sent, the interceptor retrieves the latest ID token from the Firebase SDK (\texttt{auth.currentUser.getIdToken()}) and appends it to the \texttt{Authorization} header as a Bearer token.
+
+\textbf{User State \& Registration}:
+Session state is centralized in the \texttt{use\_auth\_hook.ts} custom hook. This component listens to Firebase's \texttt{onAuthStateChanged} events. Upon successful login, it attempts to fetch the user's profile from the backend endpoint \texttt{/api/v1/users/me}.
+\begin{itemize}
+    \item \textbf{User Found}: If the backend returns a 200 OK, the user profile (including role) is loaded into the application context.
+    \item \textbf{Registration Needed}: If the backend returns a 404 Not Found, it indicates that while the user is authenticated with Firebase, they lack a corresponding record in the application database. In this scenario, the hook automatically redirects the user to the \texttt{/additional-info} page to complete their registration.
+\end{itemize}
+
+\begin{figure}[htbp]
+    \centering
+    \fbox{\begin{minipage}{0.8\textwidth}
+        \centering
+        \vspace{2cm}
+        [Place Authentication Sequence Diagram Here]
+        \vspace{2cm}
+    \end{minipage}}
+    \caption{Authentication Sequence Diagram}
+    \label{fig:auth_sequence}
+\end{figure}
+
+The diagram above illustrates the complete flow: from the initial Firebase login to the backend token verification loop and the conditional handling of user registration.
+
+\subsubsection{Workspace}
+The Workspace module integrates document processing and note-taking to facilitate seamless research. It combines a PDF viewer and a Markdown editor, allowing users to study materials and summarize findings in a unified interface.
+
+\paragraph{PdfViewer Component}
+Detailed in \texttt{PdfViewer.tsx}, this component handles the rendering and navigation of PDF files.
+\begin{itemize}
+    \item \textbf{Core Technologies}: Utilizes \texttt{react-pdf} for rendering and \texttt{pdfjs-dist} workers for off-thread processing to maintain UI responsiveness.
+    \item \textbf{Functionality}: It manages document state (scale, page number) and supports intuitive navigation via toolbar controls and keyboard shortcuts.
+    \item \textbf{Search \& Highlight}: A custom text renderer implements search functionality, wrapping matching text nodes in \texttt{<mark>} tags for visibility.
+\end{itemize}
+
+\paragraph{LiveMarkdownEditor Component}
+The \texttt{LiveMarkdownEditor.tsx} provides a Notion-style, block-based editing experience.
+\begin{itemize}
+    \item \textbf{Block Architecture}: Content is parsed into distinct blocks (e.g., text, headers, images) rather than a single text stream. This allows for granular control over rendering and editing states.
+    \item \textbf{Interaction}: The editor supports rich interactions, such as using "Enter" to split blocks and arrow keys to navigate focus.
+    \item \textbf{Persistence}: Changes are saved in real-time, with debounced updates sent to the backend to ensure data integrity.
+\end{itemize}
+
+\subsubsection{AI Integration}
+The AI integration is designed to provide a context-aware, interactive chat experience. The functionality is encapsulated within the \texttt{ChatBot} component, supported by \texttt{ChatBotContext} for state management and the \texttt{api} module for backend communication.
+
+\paragraph{Core Components}
+\begin{itemize}
+    \item \textbf{ChatBot Interface}: Defined in \texttt{ChatBot.tsx}, this primary component handles the user interface (chat window, history), manages local state (sessions, messages), and captures user input to initiate streaming requests.
+    \item \textbf{Context Management}: The \texttt{ChatBotContext} provides a global state mechanism. It enables \textbf{Context Injection}, allowing other application components to register relevant data (e.g., current page content). This context is retrieved during message composition to provide the AI with situational awareness.
+    \item \textbf{API Communication}: Implemented in \texttt{src/lib/api.ts}, the communication layer uses \texttt{axios} to handle Server-Sent Events (SSE). It supports endpoints for initiating streams (\texttt{POST /chat/stream}), retrieving sessions, and fetching models, ensuring a responsive, incremental user experience.
+\end{itemize}
+
+\paragraph{Integration Workflow}
+The interaction follows a structured flow:
+\begin{enumerate}
+    \item \textbf{Initialization}: The ChatBot loads available AI models and historical sessions.
+    \item \textbf{Context Gathering}: The system aggregates active context items (e.g., open documents) via the context provider.
+    \item \textbf{Execution}: Upon user input, a payload is constructed containing the message, selected files, and formatted context. This is streamed to the backend, with real-time listeners updating the UI as data chunks arrive.
+\end{enumerate}
+
+\subsubsection{Practice \& Quiz Module}
+The Practice \& Quiz Module is the core assessment engine of QuizSpark, managing the lifecycle of questions and user practice sessions. It integrates manual content creation with advanced AI-driven generation.
+
+\paragraph{Question Management}
+Questions are organized into \textbf{Question Banks}. The system supports three creation modes:
+\begin{itemize}
+    \item \textbf{Manual Creation}: Users add questions via a dedicated interface, specifying types (single/multiple choice), options, and correct answers.
+    \item \textbf{AI From Documents}: The system transforms static PDF or text documents into interactive questions. Using the \texttt{/ai/parse/file} endpoint, the backend streams generated questions via SSE, allowing users to review and refine them before adding to a bank.
+    \item \textbf{Adaptive Generation}: The \texttt{AiService} analyzes user performance history to identify knowledge gaps and generates targeted questions to reinforce weak areas.
+\end{itemize}
+
+\paragraph{User Practice Flow}
+The practice interface (\texttt{PracticePage.tsx}) is designed for flexibility. Users can configure sessions based on size, randomization, and tag-based filters. During a session, the system tracks time per question, provides immediate feedback (if enabled), and allows users to leave comments for collaborative verification. Upon completion, a performance summary displays scores and metrics.
+
+\paragraph{Categorization with Tags}
+A robust tagging system allows for granular organization. Users can assign custom-colored tags to questions, which then serve as filters during practice initiation, enabling focused study sessions on specific chapters or difficulty levels.
+
+\subsection{Backend}
+The backend, built with Spring Boot, implements the business logic and exposes RESTful endpoints.
+
+\subsubsection{Security \& Authentication Module}
+The Security \& Authentication Module in the QuizSpark server is designed to provide robust, stateless authentication and granular access control. It leverages \textbf{Spring Security} combined with the \textbf{Firebase Admin SDK} for secure identity management.
+
+\paragraph{User Identity Management}
+User identities are managed through a dual-layered approach combining Firebase and a local database:
+\begin{itemize}
+    \item \textbf{Local User Entity}: The \texttt{User} model (\texttt{com.quizspark.quizsparkserver.models.User}) implements Spring Security's \texttt{UserDetails} interface, allowing it to be used directly by the security framework.
+    \item \textbf{Role-Based Identities}: The system defines specific roles to enforce access policies: \texttt{ROLE\_STUDENT}, \texttt{ROLE\_TEACHER}, \texttt{ROLE\_ADMIN}, and \texttt{ROLE\_NEW} (assigned to authenticated users who haven't completed their local profile registration).
+    \item \textbf{Local Persistence}: User profiles, including roles and metadata, are stored in the local database and indexed by email for fast retrieval during the authentication flow.
+\end{itemize}
+
+\paragraph{Authentication Flow (JWT)}
+The system implements a stateless authentication flow utilizing \textbf{JSON Web Tokens (JWT)} and Firebase ID Tokens:
+\begin{enumerate}
+    \item \textbf{Token Extraction}: Every request is intercepted by the \texttt{JwtAuthenticationFilter}, which extracts the Bearer token from the \texttt{Authorization} HTTP header.
+    \item \textbf{Firebase Verification}: The \texttt{JwtUtil} service uses the Firebase Admin SDK (\texttt{verifyIdToken}) to validate the authenticity and expiration of the token.
+    \item \textbf{Identity Resolution}: Upon successful verification, the user's email is extracted from the token payload.
+    \item \textbf{Security Context Update}: The \texttt{UserService} fetches the corresponding local user. If found, their local roles are loaded; if the user is new, they are assigned \texttt{ROLE\_NEW}. Finally, a \texttt{UsernamePasswordAuthenticationToken} is placed in the \texttt{SecurityContextHolder}.
+\end{enumerate}
+
+\paragraph{Granular Access Control Policies}
+Access control is enforced at both the network (routing) and method levels:
+\begin{itemize}
+    \item \textbf{Global Configuration}: The \texttt{WebSecurityConfig} class defines the primary security filter chain. CSRF is disabled, and session management is set to \texttt{STATELESS}. Routes are filtered such that public endpoints are permitted, whereas the registration endpoint is restricted to \texttt{ROLE\_NEW}.
+    \item \textbf{Method-Level Security}: For fine-grained control, the system uses Spring's \texttt{@PreAuthorize} annotation on controller methods. For example, only users with the \texttt{ADMIN} role can create public question banks.
+    \item \textbf{CORS Policies}: The server strictly enforces CORS policies, allowing requests only from trusted origins and limiting allowed HTTP methods and headers for enhanced security.
+\end{itemize}
+
+\subsubsection{Knowledge Base Module}
+The Knowledge Base Module (KBM) provides a comprehensive infrastructure for organizing educational content, enabling efficient categorization, retrieval, and analysis of user progress.
+
+\paragraph{Organization of Educational Content}
+The module organizes content into a hierarchy that balances structure with flexibility:
+\begin{itemize}
+    \item \textbf{Question Banks}: Acting as the primary organizational units, \texttt{QuestionBank} entities group related questions, files, and tags. They support metadata storage (rating, status) and access control (\texttt{PUBLIC}/\texttt{PRIVATE}).
+    \item \textbf{Questions}: Individual assessment units supporting multiple types (Single/Multiple Answer, Fill-in-the-blank). These units handle rich descriptions and JSON-structured choices, and facilitate collaboration via \texttt{QuestionComment} entities.
+\end{itemize}
+
+\paragraph{Hierarchical Tagging Systems}
+A specialized tagging infrastructure enables granular categorization and discovery:
+\begin{itemize}
+    \item \textbf{Bank-Scoped Tags}: Tags are managed within the scope of a specific bank, creating a three-tier hierarchy (\textbf{Bank > Tag > Question}). 
+    \item \textbf{Discovery Logic}: The server (\texttt{TagService}) evaluates complex filtering where questions are retrieved based on required tag sets, allowing users to drill down into specific sub-topics.
+\end{itemize}
+
+\paragraph{Content Interaction Histories}
+The module tracks interaction history to personalize the learning experience:
+\begin{itemize}
+    \item \textbf{Interaction Tracking}: Every interaction is recorded via \texttt{Practice} and \texttt{PracticeQuestion} entities, capturing performance metrics such as accuracy and response time.
+    \item \textbf{Historical Analysis}: The system analyzes this history (\texttt{PracticeStatistic}) to calculate mastery levels. This data drives the \texttt{PracticeService} to prioritize weak areas during session initialization.
+\end{itemize}
+
+\subsubsection{Practice \& Assessment Module}
+The Practice \& Assessment Module manages the end-to-end evaluation process, focusing on session state tracking, real-time answer evaluation, and performance metric calculations.
+
+\paragraph{Practice Session State Tracking}
+The server manages practice sessions through a persistent state model involving two primary entities: \texttt{Practice} and \texttt{PracticeQuestion}:
+\begin{itemize}
+    \item \textbf{Session Lifecycle}: When a user starts a session via \texttt{PracticeController}, the server creates a \texttt{Practice} entity, selecting questions from a \texttt{QuestionBank} based on tags and past performance. Sessions are assigned a unique UUID for persistence.
+    \item \textbf{Session Configuration}: The \texttt{Practice} entity tracks settings such as \texttt{shuffleAnswer} (randomizing choice indices), \texttt{revealAnswer} (immediate feedback), and \texttt{closed} status.
+    \item \textbf{Individual Question State}: For each question, a \texttt{PracticeQuestion} entity tracks the user's answer, evaluation status (\texttt{isCorrect}), response time (\texttt{secondsToAnswer}), and a \texttt{Shuffle Mapping} (JSON-stored list for de-randomization).
+\end{itemize}
+
+\paragraph{Real-time Answer Evaluation}
+Evaluation occurs immediately when a user submits an answer. The \texttt{PracticeService} performs the following steps:
+\begin{enumerate}
+    \item \textbf{Choice De-randomization}: If shuffling was enabled, the server uses the \texttt{shuffleMapping} to translate user selections back to the original indices.
+    \item \textbf{Accuracy Validation}: Performs set-based comparison for choice questions and direct equality checks for fill-in-the-blank queries against the ground truth.
+    \item \textbf{Immediate Feedback}: If configured, the server returns the correctly mapped answer and associated question comments in the response.
+\end{enumerate}
+
+\paragraph{Performance Metric Calculations}
+The module implements a performance-driven selection algorithm and aggregates session statistics:
+\begin{itemize}
+    \item \textbf{Advanced Question Prioritization}: The \texttt{PracticeStatistic} class calculates a "Practice Score" (e.g., +1.0 for correct, -1.5 for incorrect). Questions with the lowest scores are prioritized to reinforce weak areas.
+    \item \textbf{Session Metadata Aggregation}: The \texttt{PracticeDTO} summarizes total time, accuracy rates, and topic (tag) distribution for the user interface.
+\end{itemize}
+\subsubsection{AI Intelligence Module}
+The AI Intelligence Module powers the application's most advanced features through three primary services: \texttt{AiService} (orchestration via Spring AI), \texttt{ChatService} (conversational state), and \texttt{PdfProcessorService} (intelligent document parsing).
+
+\paragraph{Dynamic Question Generation}
+This feature automates content creation from various sources:
+\begin{itemize}
+    \item \textbf{Extraction from Files}: Coordinates parsing of uploaded PDFs to identify concepts and generate questions, coordination handled by \texttt{AiService}.
+    \item \textbf{Adaptive Learning}: Analyzes a user's practice history to prompt the AI for content that targets identified weak areas.
+    \item \textbf{JSON-Schema Enforcement}: Employs a custom \texttt{ParsingState} logic to handle streaming responses reliably, ensuring all generated questions adhere to a strict validation schema.
+\end{itemize}
+
+\paragraph{Natural Language Chat Assistance}
+The application provides a context-aware chat interface for interaction with study materials:
+\begin{itemize}
+    \item \textbf{Streaming Responses}: Utilizes Project Reactor (\texttt{Flux}/\texttt{Mono}) to return real-time feedback, allowing for incremental rendering of AI responses.
+    \item \textbf{Contextual Awareness}: The \texttt{ChatService} constructs prompts that include conversation history and media attachments, effectively allowing the assistant to "see" documents.
+    \item \textbf{Multi-Model Support}: Interfaces with multiple providers (e.g., GPT-4, OpenAI) through a unified API facilitated by Spring AI.
+\end{itemize}
+
+\paragraph{Automated Content Parsing}
+Complex document ingestion is handled using a dual-strategy approach to maximize accuracy:
+\begin{itemize}
+    \item \textbf{Text vs. Vision Heuristics}: The system automatically chooses between direct text extraction for speed and Vision-based OCR for pages with complex diagrams or tables.
+    \item \textbf{Intelligent Splitting}: The \texttt{PdfProcessorService} analyzes page density and formatting to split documents into contextually aware chunks for processing.
+\end{itemize}
+
+\subsection{Database}
+The application utilizes PostgreSQL for reliable data persistence, managed via Spring Data JPA.
+
+\subsubsection{Data Persistence Implementation}
+\begin{itemize}
+    \item \textbf{Repository Pattern}: Data access is handled by repository interfaces (e.g., \texttt{UserRepository}) extending \texttt{JpaRepository}, providing standard CRUD operations and custom JPQL queries.
+    \item \textbf{Schema Optimization}: The schema employs indexing on key columns and strictly enforced foreign key constraints to maintain integrity and performance.
+\end{itemize}
+
+\subsubsection{Entity Definitions}
+The primary entities in the system are defined as follows:
+
+\begin{itemize}
+    \item \textbf{User}: Represents the end-user, storing authentication and profile details.
+    \item \textbf{Quiz}: Represents a collection of questions with metadata.
+    \item \textbf{Question}: Stores individual queries, types, and options.
+    \item \textbf{Attempt}: Records user interactions and scores.
+    \item \textbf{Document}: Represents uploaded knowledge base files.
+\end{itemize}
+
+\subsubsection{Database Schema}
+The database schema uses normalized tables (\texttt{users}, \texttt{quizzes}, \texttt{questions}, \texttt{attempts}). Foreign keys are used to enforce relationships, such as linking a question to a quiz (\texttt{quiz\_id}).
+
+\subsubsection{Entity--Relationship Diagram}
+The following diagram illustrates the relationships between the entities.
+
+\begin{figure}[htbp]
+    \centering
+    \fbox{\begin{minipage}{0.6\textwidth}
+        \centering
+        \vspace{2cm}
+        [Place ER Diagram Here]
+        \vspace{2cm}
+    \end{minipage}}
+    \caption{Entity-Relationship Diagram}
+    \label{fig:er_diagram}
+\end{figure}
 \section{Functional Demonstration}
 % Screenshots and features
 
-\subsection{Administrator Module}
-\subsection{Teacher Module}
 \subsection{Student Module}
+\subsection{Teacher Module}
 
 \section{Testing}
 % Verification and validation
