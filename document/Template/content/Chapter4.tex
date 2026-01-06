@@ -70,3 +70,255 @@ The backend is organized into functional modules that encapsulate the business l
     \item \textbf{File \& Document Module}: Facilitates the ingestion and analysis of external materials, primarily PDF documents, enabling text extraction and the conversion of static content into interactive study tools.
 \end{itemize}
 
+\section{Detailed Design}
+% UI and database design
+
+\subsection{User Interface Design Principles}
+The user interface of QuizSpark AI is designed as a modern, dark-themed web application that prioritizes readability, focus, and consistency across all screens. This subsection defines the standard layouts, visual language, and interaction patterns that all UI components must follow.
+
+\subsubsection{Screen Specifications and Layout}
+QuizSpark AI is implemented as a responsive web application optimized for desktop and laptop devices, with graceful adaptation to larger tablets.
+
+\begin{itemize}
+    \item \textbf{Base resolution:} All primary layouts are designed for a base resolution of 1920\,\(\times\)\,1080~px (Full HD). Content scales down responsively for smaller widths (e.g., 1366\,\(\times\)\,768~px) using flexible grids.
+    \item \textbf{Global layout:} The application follows a three-part structure:
+    \begin{itemize}
+        \item A persistent \textbf{left navigation sidebar} containing the main modules (Dashboard, My Banks, Workspace, Classrooms, Past Practices).
+        \item A \textbf{top app bar} within the content area for page titles, filters, search boxes, and user profile actions.
+        \item A \textbf{primary content region} that hosts page-specific content, such as the list of question banks or the practice interface.
+    \end{itemize}
+    \item \textbf{Grid system:} The content region uses a 12-column fluid grid with consistent gutters. Cards and panels are aligned to this grid to create visual order and predictable spacing.
+    \item \textbf{Standard margins and spacing:} Outer page margins of 24--32~px and inner component spacing of 8, 12, 16, and 24~px are used as standard increments, ensuring rhythm and alignment across screens.
+    \item \textbf{Responsive behavior:} Below a certain breakpoint (e.g., 1200~px), non-critical side panels such as detailed statistics collapse or stack vertically to maintain readability without horizontal scrolling.
+\end{itemize}
+
+On the \textbf{My Banks} screen, the layout consists of a filter toolbar (All Banks, Published, Draft) and a searchable list of question bank cards. On the \textbf{Practice} screen, the layout is split into two main columns: the left column shows the active question and answer options, while the right column shows practice statistics and a navigation grid for jumping between questions.
+
+\subsubsection{Color System}
+The application adopts a dark UI theme with a limited, consistent color palette. All colors are defined as CSS variables and reused across components to ensure visual consistency.
+
+\begin{itemize}
+    \item \textbf{Backgrounds:}
+    \begin{itemize}
+        \item \textbf{App background:} Very dark gray/near-black tone used for the global background to reduce eye strain and highlight content cards.
+        \item \textbf{Surface panels:} Slightly lighter dark gray tones used for cards, side panels, and navigation bars to clearly separate interactive surfaces from the base background.
+    \end{itemize}
+    \item \textbf{Primary accent:} A saturated purple accent color is used for key interactive elements such as the ``Create New Bank" button, primary call-to-action buttons, and active states in navigation. This accent color is reserved for high-priority actions.
+    \item \textbf{Secondary and status colors:}
+    \begin{itemize}
+        \item Green badges for \textit{PUBLISHED} states.
+        \item Orange badges for \textit{DRAFT} states.
+        \item Neutral grays for disabled or secondary actions.
+    \end{itemize}
+    \item \textbf{Text colors:}
+    \begin{itemize}
+        \item High-contrast off-white for primary text on dark backgrounds.
+        \item Muted gray for secondary text such as timestamps and helper descriptions.
+        \item Subtle colored text or icons (e.g., purple or blue) for metrics like question counts to visually distinguish them from labels.
+    \end{itemize}
+    \item \textbf{Hover and focus states:} All interactive elements (buttons, list items, navigation links) define lighter background overlays or border highlights on hover and focus, improving discoverability and accessibility.
+\end{itemize}
+
+\subsubsection{Typography}
+The typography system uses a single, modern sans-serif font family across the entire application (e.g., Inter or Roboto) to maintain a clean and cohesive look.
+
+\begin{itemize}
+    \item \textbf{Font family:} Primary UI font is a geometric sans-serif, defined as a CSS stack (e.g., ``Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif").
+    \item \textbf{Hierarchy:}
+    \begin{itemize}
+        \item \textbf{H1/H2 headings:} Used for page titles such as ``Banks" and ``Practice" with larger sizes and higher weight (e.g., 24--32~pt, semi-bold).
+        \item \textbf{Section titles and card titles:} Medium weight, 16--20~pt size, used for entities such as question bank names and question titles.
+        \item \textbf{Body text:} Regular weight, 13--14~pt size, used for descriptions, labels, and question stems.
+        \item \textbf{Captions and meta information:} Smaller size (11--12~pt) and lighter color for secondary details such as creation dates and completion stats.
+    \end{itemize}
+    \item \textbf{Text alignment:} Left-aligned for most content to support readability of long question texts; centered alignment is reserved for short labels (e.g., numeric buttons in the question navigator).
+    \item \textbf{Consistency rules:} Heading levels and text styles are not redefined at the component level; instead, components reuse global typography tokens to avoid visual fragmentation.
+\end{itemize}
+
+\subsubsection{Navigation and Interaction Patterns}
+The UI follows consistent patterns so that users can easily understand and predict how to interact with the system.
+
+\begin{itemize}
+    \item \textbf{Main navigation:} The left sidebar contains stable links to the primary modules. The currently active module (e.g., My Banks) is highlighted with the primary accent color and a contrasting background.
+    \item \textbf{Page-level actions:} High-impact actions appear as prominent buttons in the top-right of the content area (e.g., \textit{Create New Bank}). Secondary actions such as \textit{Edit} and \textit{Practice} are attached to each card or list item.
+    \item \textbf{Card-based content:} Lists of question banks and other entities are presented as cards with clear grouping of title, key metrics (number of questions, completions), and metadata (creation date, status badge).
+    \item \textbf{Practice workflow:} During a practice session, the current question and its options occupy the left panel to maximize readability. The right panel provides a persistent overview of progress, time, and quick navigation buttons for each question, enabling non-linear navigation while preserving user context.
+    \item \textbf{Feedback:} Button presses and state changes are accompanied by immediate visual feedback (color change, subtle animation), and results (e.g., completion, score) are shown in a structured summary view at the end of a practice.
+\end{itemize}
+
+These UI standards ensure that all existing and future screens of QuizSpark AI remain visually consistent, accessible, and easy to navigate, while supporting the core learning workflows such as managing question banks and completing practice sessions.
+
+\subsection{Database Design}
+The database design for QuizSpark AI follows a relational model implemented in PostgreSQL. The schema is carefully structured to support the core functionalities of the application, including user management, classroom collaboration, question banking, practice sessions, and tagging systems. The design emphasizes data integrity, normalization, and efficient query performance.
+
+\subsubsection{a. Entity Definitions}
+
+\paragraph{User} 
+\textbf{Key attributes:}
+\begin{itemize}
+    \item \textit{id}: Unique identifier of a user in the system.
+    \item \textit{username}: Login name used for authentication.
+    \item \textit{email}: Contact email address of the user.
+    \item \textit{role}: Role of the user in the system (e.g., student, teacher, administrator).
+    \item \textit{first\_name}, \textit{last\_name}: Personal name information of the user.
+    \item \textit{education\_level}: Educational level of the user.
+\end{itemize}
+
+\textbf{Purpose:} The User entity represents all individuals interacting with the system. Users may participate in classrooms, create question banks, perform practice sessions, and upload learning resources depending on their role.
+
+
+
+\paragraph{Classroom}
+\textbf{Key attributes:}
+\begin{itemize}
+    \item \textit{id}: Unique identifier of a classroom.
+    \item \textit{name}: Name of the classroom.
+    \item \textit{description}: Description of the classroom.
+    \item \textit{join\_code}: Code allowing users to join the classroom.
+    \item \textit{created\_at}: Time when the classroom was created.
+\end{itemize}
+
+\textbf{Purpose:} The Classroom entity represents a virtual learning space where teachers organize students and manage learning activities.
+
+\paragraph{Classroom Member}
+\textbf{Key attributes:}
+\begin{itemize}
+    \item \textit{id}: Identifier of a classroom membership record.
+    \item \textit{role}: Role of the user within the classroom.
+    \item \textit{joined\_at}: Time when the user joined the classroom.
+    \item \textit{id}: Unique identifier of a classroom.
+    \item \textit{user\_id}: Unique identifier of a user.
+\end{itemize}
+\textbf{Purpose:} The Classroom Member entity represents the participation of users in classrooms, capturing membership information and user roles within each classroom.
+
+
+
+\paragraph{Question Bank}
+\textbf{Key attributes:}
+\begin{itemize}
+    \item \textit{id}: Identifier of a question bank.
+    \item \textit{name}: Name of the question bank.
+    \item \textit{description}: Description of the question bank.
+    \item \textit{access}: Access level of the question bank.
+    \item \textit{status}: Current status of the question bank.
+    \item \textit{created\_at}: Creation time of the question bank.
+    \item \textit{rating}: Overall rating of the question bank.
+    \item \textit{number\_of\_attempts}: Number of times the question bank has been used.
+\end{itemize}
+
+\textbf{Purpose:} The Question Bank entity represents a collection of questions created and managed by users, primarily teachers, to organize and reuse assessment content.
+
+
+
+\paragraph{Question}
+\textbf{Key attributes:}
+\begin{itemize}
+    \item \textit{id}: Identifier of a question.
+    \item \textit{description}: Content of the question.
+    \item \textit{choices}: Set of answer options.
+    \item \textit{answer}: Correct answer to the question.
+    \item \textit{question\_type}: Type of the question.
+    \item \textit{explanation}: Explanation for the correct answer.
+\end{itemize}
+
+\textbf{Purpose:} The Question entity represents an individual assessment item used in quizzes and practice sessions.
+
+
+
+\paragraph{Tag}
+\textbf{Key attributes:}
+\begin{itemize}
+    \item \textit{id}: Identifier of a tag.
+    \item \textit{name}: Name of the tag.
+    \item \textit{color}: Display color associated with the tag.
+    \item \textit{description}: Description of the tag.
+\end{itemize}
+
+\textbf{Purpose:}  
+The Tag entity provides a mechanism for categorizing questions by topic, difficulty, or other pedagogical criteria.
+
+
+\paragraph{Practice}
+\textbf{Key attributes:}
+\begin{itemize}
+    \item \textit{id}: Identifier of a practice session.
+    \item \textit{closed}: Indicates whether the practice session is completed.
+    \item \textit{date}: Time when the practice session occurred.
+    \item \textit{reveal\_answer}: Indicates whether answers are revealed after completion.
+\end{itemize}
+
+\textbf{Purpose:}  
+The Practice entity represents a quiz or practice session performed by a user.
+
+
+
+\paragraph{File}
+\textbf{Key attributes:}
+\begin{itemize}
+    \item \textit{id}: Identifier of an uploaded file.
+    \item \textit{file\_name}: Name of the file.
+    \item \textit{file\_type}: Type of the file.
+    \item \textit{upload\_date}: Time when the file was uploaded.
+\end{itemize}
+
+\textbf{Purpose:} The File entity represents digital resources uploaded by users, such as images or documents used in learning materials.
+
+% \subsubsection{b. Entity--Relationship Diagram}
+% % The Entity-Relationship Diagram (ERD) illustrates the logical structure and relationships between all database entities. The diagram uses standard notation where rectangles represent entities, diamonds represent relationships, and lines indicate cardinality constraints.
+
+
+% % Key relationship patterns visible in the ERD include:
+
+% % \begin{itemize}
+% %     \item \textbf{User-Centric Design}: The Users entity serves as a central hub, connecting to classrooms, question banks, and practice sessions, reflecting the user-focused nature of the application.
+    
+% %     \item \textbf{Hierarchical Content Organization}: Question banks contain questions, which are further categorized through tags, creating a flexible three-tier content hierarchy.
+    
+% %     \item \textbf{Practice Session Tracking}: The Practice entity acts as a container for user assessment activities, linking users, classrooms, and specific question-answer pairs through Practice\_Question.
+    
+% %     \item \textbf{Collaborative Learning Structure}: The Classroom and Classroom\_Member entities enable multi-user learning environments with role-based access control.
+% % \end{itemize}
+
+% % This database design provides a solid foundation for scalability, supporting efficient queries for common operations such as retrieving user practice history, fetching questions by tag, managing classroom memberships, and generating adaptive assessments based on user performance data.
+
+\subsubsection{b. Database Schema}
+All core concepts of the system (users, classrooms, practice sessions, question banks, questions, tags, and uploaded files) are modeled as tables connected through foreign keys and junction tables. The goal of the schema is to ensure referential integrity, support efficient querying for learning analytics, and remain flexible for future feature extension.
+
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=\textwidth]{images/database_schema.png}
+    \caption{Relation Schema Diagram of QuizSpark AI Database}
+    \label{fig:relation_schema}
+\end{figure}
+
+\textbf{Primary Keys and Indexing:}
+\begin{itemize}
+    \item Most base tables (USERS, CLASSROOM, QUESTION\_BANK, QUESTION, TAG, PRACTICE, QB\_FILE) use a surrogate primary key \textit{id} of type \textit{UUID}, which guarantees global uniqueness and avoids key collisions in distributed environments.
+    \item Junction tables (CLASSROOM\_MEMBER, QUESTION\_TAG, PRACTICE\_QUESTION, QUESTION\_BANK\_FILES) use composite primary keys made from their foreign key columns (e.g., \textit{(question\_id, tag\_id)} in QUESTION\_TAG), ensuring that the same pair cannot be duplicated.
+    \item Foreign key constraints are defined for all references, such as \textit{user\_id} (USERS~$\rightarrow$~QUESTION\_BANK, PRACTICE, QB\_FILE), \textit{classroom\_id} (CLASSROOM~$\rightarrow$~CLASSROOM\_MEMBER), and \textit{bank\_id} (QUESTION\_BANK~$\rightarrow$~QUESTION), enforcing referential integrity.
+    \item Indexes are implicitly created on primary keys and are additionally defined on frequently queried fields such as \textit{username} and \textit{email} in USERS and \textit{join\_code} in CLASSROOM to speed up lookups and login/join operations.
+\end{itemize}
+
+\textbf{Data Types and Constraints:}
+\begin{itemize}
+    \item Identifiers use the \textit{UUID} type, which is well‑suited for distributed systems and avoids exposing sequential IDs.
+    \item Descriptive attributes (e.g., \textit{name}, \textit{description}, \textit{role}, \textit{access}, \textit{status}) use \textit{VARCHAR} or \textit{TEXT}, depending on the expected length.
+    \item Temporal attributes such as \textit{created\_at}, \textit{joined\_at}, \textit{upload\_date}, and \textit{date} use \textit{TIMESTAMPTZ} (timestamp with time zone) to record events consistently across time zones.
+    \item Boolean flags (e.g., \textit{closed}, \textit{reveal\_answer}) capture binary states of practice sessions.
+    \item JSON/JSONB columns (e.g., \textit{choices} and \textit{answer} in QUESTION, shuffling and mapping fields in PRACTICE\_QUESTION) allow flexible storage for structured data such as multiple‑choice options and user answers without over‑normalizing.
+    \item Numeric attributes such as \textit{rating} (FLOAT) and \textit{number\_of\_attempts} (INT) in QUESTION\_BANK support statistics and analytics on content usage.
+    \item NOT NULL and UNIQUE constraints are applied on critical fields (e.g., \textit{username}, \textit{email}, foreign keys) to prevent inconsistent or duplicate data.
+\end{itemize}
+
+% \textbf{Relationships and Cardinality:}
+% \begin{itemize}
+%     \item \textbf{Users–Classrooms}: A user can join many classrooms and a classroom contains many users. This many‑to‑many relationship is realized by CLASSROOM\_MEMBER (USERS~1..*~CLASSROOM\_MEMBER~*..1~CLASSROOM), which also stores the user’s role and join date.
+%     \item \textbf{Users–Question Banks}: Each question bank is created by exactly one user (\textit{user\_id} in QUESTION\_BANK), while a user can own multiple banks (one‑to‑many).
+%     \item \textbf{Question Banks–Questions}: A question bank contains many questions, and each question belongs to one bank (\textit{bank\_id} in QUESTION), forming a one‑to‑many relationship.
+%     \item \textbf{Questions–Tags}: Questions can be labeled with multiple tags and each tag can be applied to many questions. This many‑to‑many relationship is implemented via QUESTION\_TAG.
+%     \item \textbf{Users–Practices–Questions}: Each PRACTICE record belongs to a single user, while a user can have many practice sessions. The PRACTICE\_QUESTION table links a practice session to the specific questions answered in that session and stores per‑question performance (answer, correctness, time), modeling a many‑to‑many relationship between PRACTICE and QUESTION.
+%     \item \textbf{Question Banks–Files}: Uploaded learning materials are stored in QB\_FILE and associated with one or more question banks through QUESTION\_BANK\_FILES, allowing the same file to contribute questions to multiple banks.
+% \end{itemize}
+
+\textbf{Normalization:}
+The schema adheres to Third Normal Form (3NF). Each table represents a single, well‑defined concept; non‑key attributes depend only on the primary key of their table; and transitive dependencies are removed. Many‑to‑many associations are handled exclusively through junction tables, which reduces redundancy and simplifies updates. This normalized design ensures data consistency while still allowing efficient joins for common operations such as retrieving a user’s classrooms, generating quizzes from a question bank, or analyzing practice results across tags and topics.
