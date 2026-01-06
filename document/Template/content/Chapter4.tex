@@ -180,18 +180,6 @@ The database design for QuizSpark AI follows a relational model implemented in P
 
 \textbf{Purpose:} The Classroom entity represents a virtual learning space where teachers organize students and manage learning activities.
 
-\paragraph{Classroom Member}
-\textbf{Key attributes:}
-\begin{itemize}
-    \item \textit{id}: Identifier of a classroom membership record.
-    \item \textit{role}: Role of the user within the classroom.
-    \item \textit{joined\_at}: Time when the user joined the classroom.
-    \item \textit{id}: Unique identifier of a classroom.
-    \item \textit{user\_id}: Unique identifier of a user.
-\end{itemize}
-\textbf{Purpose:} The Classroom Member entity represents the participation of users in classrooms, capturing membership information and user roles within each classroom.
-
-
 
 \paragraph{Question Bank}
 \textbf{Key attributes:}
@@ -263,25 +251,18 @@ The Practice entity represents a quiz or practice session performed by a user.
 
 \textbf{Purpose:} The File entity represents digital resources uploaded by users, such as images or documents used in learning materials.
 
-% \subsubsection{b. Entity--Relationship Diagram}
-% % The Entity-Relationship Diagram (ERD) illustrates the logical structure and relationships between all database entities. The diagram uses standard notation where rectangles represent entities, diamonds represent relationships, and lines indicate cardinality constraints.
+\subsubsection{b. Entity--Relationship Diagram}
+The following diagram illustrates the relationships between the key entities in the QuizSpark AI database schema.
+\begin{figure}[http]
+    \centering
+    \includegraphics[width=\textwidth]{images/ERD.pdf}
+    \caption{Entity-Relationship Diagram of QuizSpark AI Database}
+    \label{fig:erd_diagram}
+\end{figure}
 
+\clearpage
 
-% % Key relationship patterns visible in the ERD include:
-
-% % \begin{itemize}
-% %     \item \textbf{User-Centric Design}: The Users entity serves as a central hub, connecting to classrooms, question banks, and practice sessions, reflecting the user-focused nature of the application.
-    
-% %     \item \textbf{Hierarchical Content Organization}: Question banks contain questions, which are further categorized through tags, creating a flexible three-tier content hierarchy.
-    
-% %     \item \textbf{Practice Session Tracking}: The Practice entity acts as a container for user assessment activities, linking users, classrooms, and specific question-answer pairs through Practice\_Question.
-    
-% %     \item \textbf{Collaborative Learning Structure}: The Classroom and Classroom\_Member entities enable multi-user learning environments with role-based access control.
-% % \end{itemize}
-
-% % This database design provides a solid foundation for scalability, supporting efficient queries for common operations such as retrieving user practice history, fetching questions by tag, managing classroom memberships, and generating adaptive assessments based on user performance data.
-
-\subsubsection{b. Database Schema}
+\subsubsection{c. Database Schema}
 All core concepts of the system (users, classrooms, practice sessions, question banks, questions, tags, and uploaded files) are modeled as tables connected through foreign keys and junction tables. The goal of the schema is to ensure referential integrity, support efficient querying for learning analytics, and remain flexible for future feature extension.
 
 \begin{figure}[t]
