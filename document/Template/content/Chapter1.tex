@@ -1,14 +1,136 @@
 \chapter{Introduction}
-% Overview of the project background and motivation
 
 \section{Problem Statement}
-% Describe the existing problems and motivation
+
+\subsection{Background and Motivation}
+
+\begin{figure}[H]
+    \centering
+    \fbox{\parbox{0.9\textwidth}{
+        \centering
+        \vspace{2.2cm}
+        \textit{Placeholder for comparison between traditional quiz systems and adaptive learning systems}
+        \vspace{2.2cm}
+    }}
+    \caption{Overview of limitations in existing quiz platforms}
+    \label{fig:problem_context}
+\end{figure}
+
+With the rapid growth of online education, quiz-based assessment systems have become an essential
+tool for evaluating learner performance.
+Platforms such as Quizizz, Google Forms, and similar systems are widely adopted due to their ease
+of use and accessibility.
+However, these systems primarily focus on static assessment rather than supporting continuous and
+personalized learning.
+
+\subsection{Identified Problems}
+
+Through analysis of existing solutions, several key limitations have been identified:
+
+\begin{itemize}
+    \item \textbf{Lack of adaptive difficulty:}
+    Most platforms provide a fixed set of questions, ignoring individual learner ability and progress.
+    
+    \item \textbf{Limited learning feedback:}
+    Feedback is often restricted to numerical scores, without explaining learning gaps or misconceptions.
+    
+    \item \textbf{Manual content creation overhead:}
+    Teachers must invest significant time in creating and maintaining large question banks.
+\end{itemize}
+
+These problems reduce learning effectiveness and limit the long-term educational value of quiz systems.
 
 \section{Objectives and Scope}
-% Project goals and defined scope
+
+\subsection{Project Objectives}
+
+The QuizSpark project aims to address the identified problems by achieving the objectives listed in
+Table~\ref{tab:intro_objectives}.
+
+\begin{table}[H]
+\centering
+\caption{Objectives of the QuizSpark project}
+\label{tab:intro_objectives}
+\begin{tabular}{|p{4cm}|p{9cm}|}
+\hline
+\textbf{Objective} & \textbf{Description} \\ \hline
+Adaptive assessment & Adjust quiz difficulty based on learner performance \\ \hline
+AI-assisted content creation & Automatically generate quiz questions from topics or documents \\ \hline
+Enhanced feedback & Provide detailed result analysis and learning insights \\ \hline
+Interactive learning & Support real-time quiz sessions and leaderboards \\ \hline
+\end{tabular}
+\end{table}
+
+\subsection{Project Scope}
+
+\begin{figure}[H]
+    \centering
+    \fbox{\parbox{0.85\textwidth}{
+        \centering
+        \vspace{2cm}
+        \textit{Placeholder for project scope diagram (in-scope vs out-of-scope)}
+        \vspace{2cm}
+    }}
+    \caption{Scope definition of the QuizSpark project}
+    \label{fig:project_scope}
+\end{figure}
+
+The scope of the project is defined as follows:
+
+\begin{description}
+    \item[In Scope:]
+    Design and implementation of a web and mobile quiz system, AI-based question generation,
+    adaptive learning mechanisms, and performance analytics.
+    
+    \item[Out of Scope:]
+    Advanced AI model research, large-scale cloud optimization, and commercial deployment.
+\end{description}
 
 \section{Proposed Solution Approach}
-% Technical direction and expected outcomes
+
+\subsection{Overall Technical Direction}
+
+\begin{figure}[H]
+    \centering
+    \fbox{\parbox{0.9\textwidth}{
+        \centering
+        \vspace{2.2cm}
+        \textit{Placeholder for high-level system architecture diagram}
+        \vspace{2.2cm}
+    }}
+    \caption{High-level architecture of the QuizSpark system}
+    \label{fig:intro_architecture}
+\end{figure}
+
+To meet the project objectives, QuizSpark adopts a modular client-server architecture.
+The system separates presentation, business logic, data management, and AI processing
+into independent components.
+
+\subsection{Expected Outcomes}
+
+The expected outcomes of the proposed solution are summarized below:
+
+\begin{itemize}
+    \item Improved learning efficiency through adaptive quizzes.
+    \item Reduced workload for teachers via AI-assisted question generation.
+    \item Better learner engagement through interactive and real-time features.
+    \item A scalable and maintainable system architecture suitable for future extensions.
+\end{itemize}
 
 \section{Report Organization}
-% Structure of the report
+
+\begin{table}[H]
+\centering
+\caption{Structure of the report}
+\label{tab:report_organization}
+\begin{tabular}{|c|p{10cm}|}
+\hline
+\textbf{Chapter} & \textbf{Description} \\ \hline
+Chapter 1 & Introduction and project overview \\ \hline
+Chapter 2 & Requirement analysis and system modeling \\ \hline
+Chapter 3 & System design and architecture \\ \hline
+Chapter 4 & System implementation \\ \hline
+Chapter 5 & Testing and evaluation \\ \hline
+Chapter 6 & Conclusion and future work \\ \hline
+\end{tabular}
+\end{table}
