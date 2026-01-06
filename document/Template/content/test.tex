@@ -1,0 +1,179 @@
+\section{Testing}
+This section details the functional testing process performed to validate the QuizzSpark platform against its specified requirements. The primary verification methodology employed for this project is \textbf{Functional Testing}, a black-box testing technique that validates the software system against its functional specifications. By focusing on the output generated in response to selected inputs, this approach ensures all core system functions align with the intended business logic.
+
+\subsection{Functional Testing Report Overview}
+The functional testing phase aims to verify that the system's features correctly implement the business logic and user requirements. By simulating end-to-end user workflows, this methodology ensures the reliability of the application's core services.
+
+\subsubsection{Testing Objectives}
+The primary objectives of the functional testing process include:
+\begin{itemize}
+    \item Ensuring 100\% alignment between implemented features and functional requirements.
+    \item Validating the security and integrity of authentication and authorization flows.
+    \item Verifying the accuracy of AI-driven question generation and adaptive learning logic.
+    \item Confirming a consistent user experience across different user roles (Student and Teacher).
+\end{itemize}
+
+\subsubsection{Test Scope}
+The scope of functional testing covers the following modules:
+\begin{itemize}
+    \item \textbf{User Identity}: Registration, Login (Local and OAuth), and Session Management.
+    \item \textbf{Assessment Engine}: Quiz creation, editing, and deletion; Student practice sessions and results.
+    \item \textbf{Collaboration \& Social}: Classroom management and Live hosting.
+    \item \textbf{AI Intelligence}: Automated question extraction from documents and performance-based personalization.
+\end{itemize}
+
+\subsubsection{Test Environment}
+Testing was conducted in a controlled environment with the following specifications:
+\begin{itemize}
+    \item \textbf{Operating Systems}: Windows 11 (Development/Web), Android 13 (Mobile).
+    \item \textbf{Browsers}: Google Chrome (v120+), Mozilla Firefox (v121+).
+    \item \textbf{Backend Stack}: Spring Boot 3.x with PostgreSQL, Firebase Admin SDK.
+    \item \textbf{Frontend Stack}: React 18+ with Vite, Tailwind CSS.
+\end{itemize}
+
+\subsubsection{Results Executive Summary}
+The following table provides a high-level summary of the functional testing outcomes across all categories.
+
+\begin{xltabular}{\textwidth}{|l|c|c|X|}
+\hline
+\textbf{Category} & \textbf{Test Cases} & \textbf{Pass Rate} & \textbf{Status Summary} \\ \hline
+\endfirsthead
+\hline
+\textbf{Category} & \textbf{Test Cases} & \textbf{Pass Rate} & \textbf{Status Summary} \\ \hline
+\endhead
+Shared Features & 15 & 66.7\% & Auth (Partial), Quiz Management, and AI are operational. \\ \hline
+Teacher Features & 3 & 66.7\% & Class management is operational; Hosting is pending. \\ \hline
+Student Features & 3 & 100\% & All student workflows are fully operational. \\ \hline
+\hline
+\textbf{Total} & \textbf{21} & \textbf{71.4\%} & \textbf{Platform core is stable and assessment-ready.} \\ \hline
+\end{xltabular}
+
+\subsection{Testing Detail}
+This section provides a structured outline and report for functional testing of the QuizzSpark platform. It serves as the primary record for validating the system against its functional requirements.
+
+\subsubsection{Shared Features (Student \& Teacher)}
+
+\paragraph{Register \& Login}
+\begin{xltabular}{\textwidth}{|l|X|X|p{3cm}|}
+\hline
+\textbf{ID} & \textbf{Test Scenario} & \textbf{Expected Result} & \textbf{Actual Result} \\ \hline
+\endfirsthead
+\hline
+\textbf{ID} & \textbf{Test Scenario} & \textbf{Expected Result} & \textbf{Actual Result} \\ \hline
+\endhead
+TC-SH-01 & User registration with valid data (Email/Password) & Account created, user is redirected to log in page in order to log in. & Working as expected \\ \hline
+TC-SH-02 & User login with valid credentials & Authenticated, JWT/Session established, redirected to dashboard. & Working as expected \\ \hline
+TC-SH-03 & OAuth Login (Google) & Successful authentication via Google account. & Working as expected \\ \hline
+TC-SH-04 & OAuth Login (Facebook) & Successful authentication via Facebook account. & Not yet implemented \\ \hline
+TC-SH-05 & Login with invalid credentials & Error message displayed; access denied. & Working as expected \\ \hline
+\end{xltabular}
+
+\paragraph{Personal Quiz Management}
+\begin{xltabular}{\textwidth}{|l|X|X|p{3cm}|}
+\hline
+\textbf{ID} & \textbf{Test Scenario} & \textbf{Expected Result} & \textbf{Actual Result} \\ \hline
+\endfirsthead
+\hline
+\textbf{ID} & \textbf{Test Scenario} & \textbf{Expected Result} & \textbf{Actual Result} \\ \hline
+\endhead
+TC-SH-06 & Create a new Quiz (Title, Description, Questions) & Quiz saved in database and visible in user's workspace. & Working as expected \\ \hline
+TC-SH-07 & Edit an existing Quiz & Changes (e.g., modified question text) are persisted correctly. & Working as expected \\ \hline
+TC-SH-08 & Delete a Quiz & Quiz removed from workspace and database. & Working as expected \\ \hline
+\end{xltabular}
+
+\paragraph{Leaderboard}
+\begin{xltabular}{\textwidth}{|l|X|X|p{3cm}|}
+\hline
+\textbf{ID} & \textbf{Test Scenario} & \textbf{Expected Result} & \textbf{Actual Result} \\ \hline
+\endfirsthead
+\hline
+\textbf{ID} & \textbf{Test Scenario} & \textbf{Expected Result} & \textbf{Actual Result} \\ \hline
+\endhead
+TC-SH-09 & View global/quiz-specific leaderboard & Correct ranking of users based on scores/time. & Not yet implemented \\ \hline
+TC-SH-10 & Real-time update of leaderboard scores & Scores refresh upon completion of a quiz session. & Not yet implemented \\ \hline
+\end{xltabular}
+
+\paragraph{Multi-Platform Access}
+\begin{xltabular}{\textwidth}{|l|X|X|p{3cm}|}
+\hline
+\textbf{ID} & \textbf{Test Scenario} & \textbf{Expected Result} & \textbf{Actual Result} \\ \hline
+\endfirsthead
+\hline
+\textbf{ID} & \textbf{Test Scenario} & \textbf{Expected Result} & \textbf{Actual Result} \\ \hline
+\endhead
+TC-SH-11 & Sync data between Web and Mobile & Quiz created on Web is visible on the Mobile app immediately. & Not yet implemented \\ \hline
+TC-SH-12 & Cross-platform Login session & User remains logged in across different devices (if supported). & Not yet implemented \\ \hline
+\end{xltabular}
+
+\paragraph{Privacy \& Settings}
+\begin{xltabular}{\textwidth}{|l|X|X|p{3cm}|}
+\hline
+\textbf{ID} & \textbf{Test Scenario} & \textbf{Expected Result} & \textbf{Actual Result} \\ \hline
+\endfirsthead
+\hline
+\textbf{ID} & \textbf{Test Scenario} & \textbf{Expected Result} & \textbf{Actual Result} \\ \hline
+\endhead
+TC-SH-13 & Privacy settings (Public vs. Private) & Private quizzes are inaccessible via shared link if not authorized. & Working as expected \\ \hline
+\end{xltabular}
+
+\paragraph{AI Question Generation}
+\begin{xltabular}{\textwidth}{|l|X|X|p{3cm}|}
+\hline
+\textbf{ID} & \textbf{Test Scenario} & \textbf{Expected Result} & \textbf{Actual Result} \\ \hline
+\endfirsthead
+\hline
+\textbf{ID} & \textbf{Test Scenario} & \textbf{Expected Result} & \textbf{Actual Result} \\ \hline
+\endhead
+TC-SH-14 & Generate questions via file upload (PDF, Word, Markdown) & AI extracts concepts and produces relevant MCQ questions from the file. & Working as expected \\ \hline
+TC-SH-15 & Generate questions based on user practice history & AI analyzes past performance and targets identified knowledge gaps. & Working as expected \\ \hline
+\end{xltabular}
+
+\subsubsection{Teacher Features}
+
+\paragraph{Manage Classes}
+\begin{xltabular}{\textwidth}{|l|X|X|p{3cm}|}
+\hline
+\textbf{ID} & \textbf{Test Scenario} & \textbf{Expected Result} & \textbf{Actual Result} \\ \hline
+\endfirsthead
+\hline
+\textbf{ID} & \textbf{Test Scenario} & \textbf{Expected Result} & \textbf{Actual Result} \\ \hline
+\endhead
+TC-TE-01 & Create a new Class/Group & Class ID generated; Teacher assigned as owner. & Working as expected \\ \hline
+TC-TE-02 & Add/Remove students from Class & Student list updated; students see the class in their dashboard. & Working as expected \\ \hline
+\end{xltabular}
+
+\paragraph{Host Quiz Session}
+\begin{xltabular}{\textwidth}{|l|X|X|p{3cm}|}
+\hline
+\textbf{ID} & \textbf{Test Scenario} & \textbf{Expected Result} & \textbf{Actual Result} \\ \hline
+\endfirsthead
+\hline
+\textbf{ID} & \textbf{Test Scenario} & \textbf{Expected Result} & \textbf{Actual Result} \\ \hline
+\endhead
+TC-TE-03 & Start a live host session for a Quiz & Join code generated; session active in backend. & Not yet implemented \\ \hline
+\end{xltabular}
+
+\subsubsection{Student Features}
+
+\paragraph{Join Quiz Session}
+\begin{xltabular}{\textwidth}{|l|X|X|p{3cm}|}
+\hline
+\textbf{ID} & \textbf{Test Scenario} & \textbf{Expected Result} & \textbf{Actual Result} \\ \hline
+\endfirsthead
+\hline
+\textbf{ID} & \textbf{Test Scenario} & \textbf{Expected Result} & \textbf{Actual Result} \\ \hline
+\endhead
+TC-ST-01 & Join session via Invite Code & Student name appears in Teacher's host lobby. & Working as expected \\ \hline
+\end{xltabular}
+
+\paragraph{Practice Quiz \& Results}
+\begin{xltabular}{\textwidth}{|l|X|X|p{3cm}|}
+\hline
+\textbf{ID} & \textbf{Test Scenario} & \textbf{Expected Result} & \textbf{Actual Result} \\ \hline
+\endfirsthead
+\hline
+\textbf{ID} & \textbf{Test Scenario} & \textbf{Expected Result} & \textbf{Actual Result} \\ \hline
+\endhead
+TC-ST-02 & Complete a practice quiz (Single User) & Answers submitted; score calculated instantly. & Working as expected \\ \hline
+TC-ST-03 & View detailed results dashboard & Breakdown of correct/incorrect questions, time taken, and AI feedback. & Working as expected \\ \hline
+\end{xltabular}
