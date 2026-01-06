@@ -276,7 +276,56 @@ The following diagram illustrates the relationships between the entities.
 
 \section{Deployment}
 % Deployment instructions
+The deployment strategy for QuizSpark involves containerizing the application components using Docker, pushing the images to a central registry (Docker Hub), and then pulling and running them on a cloud instance. This approach ensures consistency across different environments and simplifies the deployment process.
 
-\subsection{Deployment Architecture}
-\subsection{Environment Configuration}
-\subsection{Running the System}
+\subsection{Build and Push Images}
+The first step is to build the Docker images for the server and website and push them to Docker Hub. This is done using the following commands:
+
+\begin{enumerate}
+    \item \textbf{Login to Docker Hub:}
+    \begin{verbatim}
+    docker login
+    \end{verbatim}
+    
+    \item \textbf{Build and Push Server Image:}
+    \begin{verbatim}
+    cd server
+    docker build -t longvu152/quizspark-server:latest .
+    docker push longvu152/quizspark-server:latest
+    \end{verbatim}
+    
+    \item \textbf{Build and Push Website Image:}
+    \begin{verbatim}
+    cd website
+    docker build -t longvu152/quizspark-website:latest .
+    docker push longvu152/quizspark-website:latest
+    \end{verbatim}
+\end{enumerate}
+
+\subsection{Deploy on Cloud Instance}
+Once the images are available on Docker Hub, the application can be deployed to any cloud instance (e.g., AWS EC2) that has Docker and Docker Compose installed.
+
+\begin{enumerate}
+    \item \textbf{Prepare the Environment:}
+    Ensure that the cloud instance has the necessary configuration files. We use \texttt{docker-compose.ec2.yml} and \texttt{.env} files to the instance.
+    
+    \item \textbf{Start the Application:}
+    Run the following command to pull the latest images and start the services in detached mode:
+    \begin{verbatim}
+    docker-compose -f docker-compose.ec2.yml up -d
+    \end{verbatim}
+    
+    \item \textbf{Verify Deployment:}
+    Check the status of the running containers:
+    \begin{verbatim}
+    docker-compose -f docker-compose.ec2.yml ps
+    \end{verbatim}
+\end{enumerate}
+
+The \texttt{docker-compose.ec2.yml} file is configured to pull the pre-built images from Docker Hub, ensuring that the production environment runs the exact same code as built in the previous step. It orchestrates the following services:
+\begin{itemize}
+    \item \textbf{h2-database}: The H2 database running in TCP server mode.
+    \item \textbf{server}: The Spring Boot backend application.
+    \item \textbf{website}: The React frontend served via Nginx.
+    \item \textbf{tunnel}: A Cloudflare tunnel to securely expose the application.
+\end{itemize}
