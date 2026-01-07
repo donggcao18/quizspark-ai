@@ -6,11 +6,17 @@
 
 \subsection{Architectural Style}
 The application is designed using a robust Client-Server architecture, ensuring clear separation of concerns, scalability, and maintainability. This architecture divides the system into two main components: the Front-End (Client) and the Back-End (Server), communicating over a network.
+\begin{figure}[http]
+    \centering
+    \includegraphics[width=0.5\textwidth]{images/mvc.pdf}
+    \caption{Model-View Controller Architecture}
+    \label{fig:mvc_diagram}
+\end{figure}
 
 \begin{itemize}
     \item \textbf{Single Page Application (SPA)}: The user interface is implemented as a Single Page Application using React.js. In this model, the browser loads a single HTML page and dynamically updates the content as the user interacts with the app, without requiring full page reloads. This provides a fluid and responsive user experience similar to a desktop application.
     \item \textbf{RESTful API}: The backend, built with Spring Boot, exposes a set of RESTful (Representational State Transfer) endpoints. These endpoints handle client requests, process business logic, and return data in usually JSON format. The API is stateless, meaning each request from the client must contain all the information needed to understand and process the request.
-    \item \textbf{Model-View-Controller (MVC)}: The backend adheres to the MVC design pattern, although adapted for an API-centric architecture. 
+    \item \textbf{Model-View-Controller (MVC)}: The backend adheres to the MVC design pattern which is shown in the  figure ~\ref{fig:mvc_diagram}, although adapted for an API-centric architecture. 
     \begin{itemize}
         \item \textbf{Model}: Represents the data structure and business rules (JPA Entities and DTOs).
         \item \textbf{View}: In this architecture, the traditional "View" rendering is offloaded to the React frontend. The backend implementation of the view is essentially the JSON serialization of the models.

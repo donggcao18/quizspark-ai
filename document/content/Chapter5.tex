@@ -245,27 +245,12 @@ The primary entities in the system are defined as follows:
     \item \textbf{Document}: Represents uploaded knowledge base files.
 \end{itemize}
 
-\subsubsection{Database Schema}
-The database schema uses normalized tables (\texttt{users}, \texttt{quizzes}, \texttt{questions}, \texttt{attempts}). Foreign keys are used to enforce relationships, such as linking a question to a quiz (\texttt{quiz\_id}).
 
-\subsubsection{Entity--Relationship Diagram}
-The following diagram illustrates the relationships between the entities.
-
-\begin{figure}[htbp]
-    \centering
-    \fbox{\begin{minipage}{0.6\textwidth}
-        \centering
-        \vspace{2cm}
-        [Place ER Diagram Here]
-        \vspace{2cm}
-    \end{minipage}}
-    \caption{Entity-Relationship Diagram}
-    \label{fig:er_diagram}
-\end{figure}
 \section{Functional Demonstration}
 % Screenshots and features
 
 \subsection{Student Module}
+
 \subsection{Teacher Module}
 
 \section{Testing}
@@ -311,7 +296,6 @@ The following table provides a high-level summary of the functional testing outc
 Shared Features & 15 & 66.7\% & Auth (Partial), Quiz Management, and AI are operational. \\ \hline
 Teacher Features & 3 & 66.7\% & Class management is operational; Hosting is pending. \\ \hline
 Student Features & 3 & 100\% & All student workflows are fully operational. \\ \hline
-\hline
 \textbf{Total} & \textbf{21} & \textbf{71.4\%} & \textbf{Platform core is stable and assessment-ready.} \\ \hline
 \end{tabular}
 \end{center}
@@ -323,7 +307,7 @@ This section provides a structured outline and report for functional testing of 
 
 \paragraph{Register \& Login}
 \begin{center}
-\begin{tabular}{|l|p{4.5cm}|p{4.5cm}|p{3.5cm}|}
+\begin{tabular}{|c|p{4.5cm}|p{5.5cm}|p{3.0cm}|}
 \hline
 \textbf{ID} & \textbf{Test Scenario} & \textbf{Expected Result} & \textbf{Actual Result} \\ \hline
 TC-SH-01 & User registration with valid data (Email/Password) & Account created, user is redirected to log in page in order to log in. & Working as expected \\ \hline
@@ -336,7 +320,7 @@ TC-SH-05 & Login with invalid credentials & Error message displayed; access deni
 
 \paragraph{Personal Quiz Management}
 \begin{center}
-\begin{tabular}{|l|p{4.5cm}|p{4.5cm}|p{3.5cm}|}
+\begin{tabular}{|c|p{4.5cm}|p{5.5cm}|p{2.0cm}|}
 \hline
 \textbf{ID} & \textbf{Test Scenario} & \textbf{Expected Result} & \textbf{Actual Result} \\ \hline
 TC-SH-06 & Create a new Quiz (Title, Description, Questions) & Quiz saved in database and visible in user's workspace. & Working as expected \\ \hline
