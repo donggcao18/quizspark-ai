@@ -7,75 +7,6 @@ This section details the internal working mechanisms of the system, structured b
 \subsection{Frontend}
 The frontend architecture is modular, with specialized components handling distinct functional areas:
 
-\subsubsection{Routing Implementation}
-The \textbf{Routing Module}, defined in \texttt{App.tsx}, acts as the central nervous system of the application, mapping URL paths to specific React components. It utilizes \texttt{React Router} to organize the application into three distinct access layers, ensuring a secure and logical navigation flow.
-
-\textbf{Navigation Tree Structure}:
-\begin{itemize}
-    \item \textbf{Public Routes}: Accessible to all visitors, these include the \texttt{LandingPage}, \texttt{QuestionBankPage}, and \texttt{AboutPage}. They are wrapped in a shared layout providing the public header and footer.
-    \item \textbf{Anonymous Routes}: Restricted to non-authenticated users (e.g., \texttt{/login}, \texttt{/signup}). The \texttt{AnonymousRoute} component automatically redirects logged-in users to their dashboard, preventing redundant access to auth pages.
-    \item \textbf{Protected Routes}: These require a valid session. The \texttt{ProtectedRoute} wrapper guards critical areas such as the \texttt{HomePage} (Dashboard), \texttt{WorkspacePage}, and \texttt{BankEditPage}. If an unauthenticated user attempts to access these, they are immediately redirected to the login page.
-\end{itemize}
-
-\textbf{Role-Based Access Control (RBAC)}:
-
-To further refine security, the application implements granular permission checks via the \texttt{RoleProtectedRoute} component. This wrapper intercepts navigation attempts to sensitive areas. For instance, the \texttt{/home/classrooms} route is explicitly restricted to users with \texttt{ROLE\_TEACHER} or \texttt{ROLE\_ADMIN}. If a student attempts to access this route, the system evaluates their role against the allowed list and redirects them to the generic home page if they lack the necessary privileges.
-
-\begin{figure}[htbp]
-    \centering
-    \fbox{\begin{minipage}{0.8\textwidth}
-        \centering
-        \vspace{2cm}
-        [Place Navigation Wireframe Diagram Here]
-        \vspace{2cm}
-    \end{minipage}}
-    \caption{Navigation Wireframe Diagram}
-    \label{fig:nav_wireframe}
-\end{figure}
-
-The diagram above visually represents the application's navigation flow. It highlights the segregation between the Public Zone (Landing, About), the Authentication Zone (Login, Signup), and the Protected Zone (Dashboard, Workspace), illustrating how the routing guards enforce access control at each transition point.
-
-\subsubsection{Authentication Flow}
-The \textbf{Auth Module} secures the application through a hybrid approach combining Firebase Authentication for identity verification and a Spring Boot backend for role management.
-
-\textbf{Token Management}:
-Secure communication is enforced via the \texttt{api.ts} module. It utilizes an Axios interceptor to automatically attach the user's JWT to every outgoing HTTP request. Before a request is sent, the interceptor retrieves the latest ID token from the Firebase SDK (\texttt{auth.currentUser.getIdToken()}) and appends it to the \texttt{Authorization} header as a Bearer token.
-
-\textbf{User State \& Registration}:
-Session state is centralized in the \texttt{use\_auth\_hook.ts} custom hook. This component listens to Firebase's \texttt{onAuthStateChanged} events. Upon successful login, it attempts to fetch the user's profile from the backend endpoint \texttt{/api/v1/users/me}.
-\begin{itemize}
-    \item \textbf{User Found}: If the backend returns a 200 OK, the user profile (including role) is loaded into the application context.
-    \item \textbf{Registration Needed}: If the backend returns a 404 Not Found, it indicates that while the user is authenticated with Firebase, they lack a corresponding record in the application database. In this scenario, the hook automatically redirects the user to the \texttt{/additional-info} page to complete their registration.
-\end{itemize}
-
-\begin{figure}[htbp]
-    \centering
-    \includegraphics[width=0.5\textwidth]{images/Gemini_Generated_Image_e21n56e21n56e21n.png}
-    \caption{Authentication Sequence Diagram}
-    \label{fig:auth_sequence}
-\end{figure}
-
-The diagram above illustrates the complete flow: from the initial Firebase login to the backend token verification loop and the conditional handling of user registration.
-
-\subsubsection{Workspace}
-The Workspace module integrates document processing and note-taking to facilitate seamless research. It combines a PDF viewer and a Markdown editor, allowing users to study materials and summarize findings in a unified interface.
-
-\paragraph{PdfViewer Component}
-Detailed in \texttt{PdfViewer.tsx}, this component handles the rendering and navigation of PDF files.
-\begin{itemize}
-    \item \textbf{Core Technologies}: Utilizes \texttt{react-pdf} for rendering and \texttt{pdfjs-dist} workers for off-thread processing to maintain UI responsiveness.
-    \item \textbf{Functionality}: It manages document state (scale, page number) and supports intuitive navigation via toolbar controls and keyboard shortcuts.
-    \item \textbf{Search \& Highlight}: A custom text renderer implements search functionality, wrapping matching text nodes in \texttt{<mark>} tags for visibility.
-\end{itemize}
-
-\paragraph{LiveMarkdownEditor Component}
-The \texttt{LiveMarkdownEditor.tsx} provides a Notion-style, block-based editing experience.
-\begin{itemize}
-    \item \textbf{Block Architecture}: Content is parsed into distinct blocks (e.g., text, headers, images) rather than a single text stream. This allows for granular control over rendering and editing states.
-    \item \textbf{Interaction}: The editor supports rich interactions, such as using "Enter" to split blocks and arrow keys to navigate focus.
-    \item \textbf{Persistence}: Changes are saved in real-time, with debounced updates sent to the backend to ensure data integrity.
-\end{itemize}
-
 \subsubsection{AI Integration}
 The AI integration is designed to provide a context-aware, interactive chat experience. The functionality is encapsulated within the \texttt{ChatBot} component, supported by \texttt{ChatBotContext} for state management and the \texttt{api} module for backend communication.
 
@@ -113,58 +44,6 @@ A robust tagging system allows for granular organization. Users can assign custo
 
 \subsection{Backend}
 The backend, built with Spring Boot, implements the business logic and exposes RESTful endpoints.
-
-\subsubsection{Security \& Authentication Module}
-The Security \& Authentication Module in the QuizSpark server is designed to provide robust, stateless authentication and granular access control. It leverages \textbf{Spring Security} combined with the \textbf{Firebase Admin SDK} for secure identity management.
-
-\paragraph{User Identity Management}
-User identities are managed through a dual-layered approach combining Firebase and a local database:
-\begin{itemize}
-    \item \textbf{Local User Entity}: The \texttt{User} model (\texttt{com.quizspark.quizsparkserver.models.User}) implements Spring Security's \texttt{UserDetails} interface, allowing it to be used directly by the security framework.
-    \item \textbf{Role-Based Identities}: The system defines specific roles to enforce access policies: \texttt{ROLE\_STUDENT}, \texttt{ROLE\_TEACHER}, \texttt{ROLE\_ADMIN}, and \texttt{ROLE\_NEW} (assigned to authenticated users who haven't completed their local profile registration).
-    \item \textbf{Local Persistence}: User profiles, including roles and metadata, are stored in the local database and indexed by email for fast retrieval during the authentication flow.
-\end{itemize}
-
-\paragraph{Authentication Flow (JWT)}
-The system implements a stateless authentication flow utilizing \textbf{JSON Web Tokens (JWT)} and Firebase ID Tokens:
-\begin{enumerate}
-    \item \textbf{Token Extraction}: Every request is intercepted by the \texttt{JwtAuthenticationFilter}, which extracts the Bearer token from the \texttt{Authorization} HTTP header.
-    \item \textbf{Firebase Verification}: The \texttt{JwtUtil} service uses the Firebase Admin SDK (\texttt{verifyIdToken}) to validate the authenticity and expiration of the token.
-    \item \textbf{Identity Resolution}: Upon successful verification, the user's email is extracted from the token payload.
-    \item \textbf{Security Context Update}: The \texttt{UserService} fetches the corresponding local user. If found, their local roles are loaded; if the user is new, they are assigned \texttt{ROLE\_NEW}. Finally, a \texttt{UsernamePasswordAuthenticationToken} is placed in the \texttt{SecurityContextHolder}.
-\end{enumerate}
-
-\paragraph{Granular Access Control Policies}
-Access control is enforced at both the network (routing) and method levels:
-\begin{itemize}
-    \item \textbf{Global Configuration}: The \texttt{WebSecurityConfig} class defines the primary security filter chain. CSRF is disabled, and session management is set to \texttt{STATELESS}. Routes are filtered such that public endpoints are permitted, whereas the registration endpoint is restricted to \texttt{ROLE\_NEW}.
-    \item \textbf{Method-Level Security}: For fine-grained control, the system uses Spring's \texttt{@PreAuthorize} annotation on controller methods. For example, only users with the \texttt{ADMIN} role can create public question banks.
-    \item \textbf{CORS Policies}: The server strictly enforces CORS policies, allowing requests only from trusted origins and limiting allowed HTTP methods and headers for enhanced security.
-\end{itemize}
-
-\subsubsection{Knowledge Base Module}
-The Knowledge Base Module (KBM) provides a comprehensive infrastructure for organizing educational content, enabling efficient categorization, retrieval, and analysis of user progress.
-
-\paragraph{Organization of Educational Content}
-The module organizes content into a hierarchy that balances structure with flexibility:
-\begin{itemize}
-    \item \textbf{Question Banks}: Acting as the primary organizational units, \texttt{QuestionBank} entities group related questions, files, and tags. They support metadata storage (rating, status) and access control (\texttt{PUBLIC}/\texttt{PRIVATE}).
-    \item \textbf{Questions}: Individual assessment units supporting multiple types (Single/Multiple Answer, Fill-in-the-blank). These units handle rich descriptions and JSON-structured choices, and facilitate collaboration via \texttt{QuestionComment} entities.
-\end{itemize}
-
-\paragraph{Hierarchical Tagging Systems}
-A specialized tagging infrastructure enables granular categorization and discovery:
-\begin{itemize}
-    \item \textbf{Bank-Scoped Tags}: Tags are managed within the scope of a specific bank, creating a three-tier hierarchy (\textbf{Bank > Tag > Question}). 
-    \item \textbf{Discovery Logic}: The server (\texttt{TagService}) evaluates complex filtering where questions are retrieved based on required tag sets, allowing users to drill down into specific sub-topics.
-\end{itemize}
-
-\paragraph{Content Interaction Histories}
-The module tracks interaction history to personalize the learning experience:
-\begin{itemize}
-    \item \textbf{Interaction Tracking}: Every interaction is recorded via \texttt{Practice} and \texttt{PracticeQuestion} entities, capturing performance metrics such as accuracy and response time.
-    \item \textbf{Historical Analysis}: The system analyzes this history (\texttt{PracticeStatistic}) to calculate mastery levels. This data drives the \texttt{PracticeService} to prioritize weak areas during session initialization.
-\end{itemize}
 
 \subsubsection{Practice \& Assessment Module}
 The Practice \& Assessment Module manages the end-to-end evaluation process, focusing on session state tracking, real-time answer evaluation, and performance metric calculations.

@@ -59,17 +59,21 @@ Dependencies always flow inwards: the front-end \texttt{pages} depend on \texttt
 
 
 \subsection{Component Design}
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.8\textwidth]{images/Component_Diagram.png}
+    \caption{Component Diagram of QuizSpark AI System}
+    \label{fig:component_diagram}
+\end{figure}
+
 The application is composed of several key components that work together to provide the desired functionality.
 
 \textbf{Frontend Components (React)}
 The frontend is structured into modular feature-based components:
 
 \begin{itemize}
-    \item \textbf{Routing Module}: Orchestrates the navigation logic of the application, mapping URL paths to specific page components and managing the overall layout structure.
-    \item \textbf{Auth Module}: Securitizes the application by managing user identity, handling authentication flows (login, registration), and maintaining session state.
     \item \textbf{Practice \& Quiz Module}: Manages the end-to-end assessment process, from discovering quizzes to taking them and reviewing performance.
     \item \textbf{Classroom Module}: Facilitates collaborative learning by grouping users into classrooms where they can share resources and track progress.
-    \item \textbf{Workspace Module}: Provides a comprehensive environment for studying and content creation, integrating document viewing with note-taking and management tools.
     \item \textbf{AI Module}: Powers the intelligent features of the application, including the chatbot assistant, automated quiz generation, and content parsing.
 \end{itemize}
 
@@ -77,12 +81,9 @@ The frontend is structured into modular feature-based components:
 The backend is organized into functional modules that encapsulate the business logic and service orchestration:
 
 \begin{itemize}
-    \item \textbf{Security \& Auth Module}: Secures the system by managing user identities, handling robust authentication flows (JWT), and enforcing granular access control policies across all API endpoints.
     \item \textbf{Classroom Module}: Orchestrates the logic of collaborative learning, facilitating the creation of classrooms, member management, and role-based resource sharing among users.
     \item \textbf{Practice \& Assessment Module}: Manages the end-to-end evaluation process, including practice session state tracking, real-time answer evaluation, and performance metric calculations.
-    \item \textbf{Knowledge Base Module}: Provides a comprehensive infrastructure for organizing educational content, encompassing question banks, hierarchical tagging systems, and content interaction histories.
     \item \textbf{AI Intelligence Module}: Powers the intelligent features of the application, including dynamic question generation, natural language chat assistance, and automated content parsing.
-    \item \textbf{File \& Document Module}: Facilitates the ingestion and analysis of external materials, primarily PDF documents, enabling text extraction and the conversion of static content into interactive study tools.
 \end{itemize}
 
 \section{Detailed Design}
