@@ -37,12 +37,12 @@ These problems reduce learning effectiveness and limit the long-term educational
 
 \section{Objectives and Scope}
 
+This section defines what the QuizSpark project aims to achieve and clearly delimits the boundaries of the system. First, the core pedagogical and technical objectives are summarized, focusing on adaptive assessment, AI-assisted content creation, enhanced feedback, and interactive learning. Then, the project scope specifies which functionalities and implementation concerns are included in this work and which related topics are explicitly excluded or reserved for future development.
+
 \subsection{Project Objectives}
 
 \begin{table}[H]
 \centering
-\caption{Objectives of the QuizSpark project}
-\label{tab:intro_objectives}
 \begin{tabular}{|p{4cm}|p{9cm}|}
 \hline
 \textbf{Objective} & \textbf{Description} \\ \hline
@@ -51,22 +51,30 @@ AI-assisted content creation & Automatically generate quiz questions from topics
 Enhanced feedback & Provide detailed result analysis and learning insights \\ \hline
 Interactive learning & Support real-time quiz sessions and leaderboards \\ \hline
 \end{tabular}
+\caption{Objectives of the QuizSpark project}
+\label{tab:intro_objectives}
 \end{table}
 
 \subsection{Project Scope}
 
 The scope of the project is defined as follows:
 
-\begin{description}
-    \item[In Scope:]
-    Design and implementation of a web and mobile quiz system, AI-based question generation,
-    adaptive learning mechanisms, and performance analytics.
-    
-    \item[Out of Scope:]
-    Advanced AI model research, large-scale cloud optimization, and commercial deployment.
-\end{description}
+\textbf{In Scope:}
+\begin{itemize}
+        \item Design and implementation of a web-based quiz system that supports core assessment workflows for students and teachers.
+        \item AI-based question generation from teacher-provided topics or uploaded documents.
+        \item Adaptive learning mechanisms that use each student's historical quiz results to automatically tailor question difficulty and content in subsequent quizzes.
+        \item Dashboards and reports for performance analytics at both individual and class levels.
+\end{itemize}
 
-\section{Proposed Solution Approach}
+\textbf{Out of Scope:}
+\begin{itemize}
+        \item Advanced AI model research, such as training new large language models.
+        \item Large-scale cloud cost optimization and infrastructure tuning for millions of users.
+        \item Commercial deployment activities, including billing integration, marketing, and enterprise-level support. These are acknowledged as potential future work but remain outside the scope of this academic project.
+\end{itemize}
+
+\section{Software Development Model}
 
 \begin{figure}[H]
     \centering
@@ -75,7 +83,7 @@ The scope of the project is defined as follows:
     \label{fig:intro_architecture}
 \end{figure}
 
-The QuizSpark project follows the \textbf{Waterfall development model}.
+The QuizSpark project follows the \textbf{Waterfall development model} (Figure~\ref{fig:intro_architecture}).
 System requirements are defined at the beginning of the project and the
 development process is conducted through sequential phases, including
 requirements analysis, system design, implementation, testing, and documentation.

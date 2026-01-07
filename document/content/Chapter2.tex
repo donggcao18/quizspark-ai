@@ -8,8 +8,7 @@ Analyzing stakeholders is essential to ensure that \textbf{QuizSpark} effectivel
 
 \begin{table}[h]
 \centering
-\label{tab:stakeholder}
-\begin{tabular}{|p{3cm}|p{5cm}|p{5cm}|}
+\begin{tabular}{|p{4cm}|p{6cm}|p{6cm}|}
 \hline
 \textbf{Stakeholder} & \textbf{Role / Objective} & \textbf{Main Needs} \\
 \hline
@@ -24,8 +23,10 @@ System Administrators (Admins) & Manage users and content across the platform. T
 Advertising Partners & Provide revenue for the platform. Their goal is to reach appropriate target audiences. & Implement contextual advertising mechanisms suitable for students, ensuring ads are non-intrusive and do not disrupt the learning experience.\\
 \hline
 \end{tabular}
+\caption{Stakeholders of the QuizSpark system and their main needs}
+\label{tab:stakeholder}
 \end{table}
-So, the need of \textbf{Students} (Adaptive Testing, Detailed Progress Tracking) are central, directly influencing Objective 1.3. The needs of \textbf{Teachers} (Content Creation, Analytics) determine the usefulness of the tool in real educational environments.
+So, the need of \textbf{Students} (Adaptive Testing, Detailed Progress Tracking) are central, directly influencing Project Objective . The needs of \textbf{Teachers} (Content Creation, Analytics) determine the usefulness of the tool in real educational environments.
 
 \subsection{Review of Existing Systems}
 To better understand the context and identify gaps in current learning platforms, several popular online assessment systems were reviewed, including \textbf{Quizizz}, \textbf{Azota}, and \textbf{Google Forms}. These systems are widely used in educational environments and provide a solid baseline for comparison.
@@ -64,19 +65,33 @@ These features collectively aim to address the shortcomings of existing systems 
 % High-level functional description
 
 \subsection{Overall Use Case Diagram}
-The selected use cases reflect practical interactions in QuizSpark. Students participate in quizzes, join live sessions, submit answers, and track progress. Teachers create and manage quizzes, evaluate question quality, host sessions, manage classes, and analyze performance. AI features support both Students and Teachers by generating questions and recommending personalized quizzes, enabling efficient content creation and adaptive learning.
+This overall use case diagram (Figure~\ref{fig:usecase_overall}) summarizes the core interactions in QuizSpark. 
+% Its main actors are \textbf{Students}, \textbf{Teachers}, and supporting \textbf{AI services}. Students take quizzes, join live sessions, submit answers, and review their learning progress. Teachers create and manage quizzes, evaluate question quality, host live sessions, manage classes, and analyze performance results. AI services assist both Students and Teachers by generating questions and recommending personalized quizzes, thereby enabling efficient content creation and adaptive learning.
+\textbf{-- Main Actors}
+\begin{itemize}
+    \item \textbf{Student}: Learns by taking quizzes, joining live sessions, and reviewing progress.
+    \item \textbf{Teacher}: Designs and manages quizzes, classes, and live quiz sessions.
+    \item \textbf{AI Service}: Supports both roles with automatic question generation and adaptive recommendations.
+\end{itemize}
+
+\textbf{-- Main Use Cases}
+\begin{itemize}
+    \item \textbf{Take / Practice Quiz}: Student answers questions in self-paced quizzes.
+    \item \textbf{Join Live Session}: Student participates in teacher-hosted, real-time quiz sessions.
+    \item \textbf{View Results \& Progress}: Student reviews scores, history, and feedback.
+    \item \textbf{Create \& Manage Quizzes}: Teacher builds, edits, and organizes quiz content.
+    \item \textbf{Manage Classes}: Teacher manages class lists and assigns quizzes to groups of students.
+    \item \textbf{Analyze Performance}: Teacher views analytics for classes and individual students.
+    \item \textbf{AI Question Generation}: AI service generates quiz questions from topics/documents.
+    \item \textbf{Adaptive Quiz Recommendation}: AI service recommends or adapts quizzes based on student history.
+\end{itemize}
+
 \begin{figure}[h]
     \centering
     \includegraphics[width=\textwidth]{images/UseCase.png}
     \caption{Overall Use Case Diagram of the QuizSpark System}
     \label{fig:usecase_overall}
 \end{figure}
-
-The purpose of presenting an overall use case diagram at this stage is to offer a visual reference that complements the surrounding textual descriptions. The diagram is not intended to introduce new information, but rather to support the reader’s orientation when navigating the document. By placing the figure alongside the written sections, the document maintains a balance between graphical and textual representations, which is a common practice in software engineering reports.
-
-In formal documentation, figures such as use case diagrams are often accompanied by brief contextual text to ensure continuity in reading flow. This additional text helps prevent abrupt transitions between sections and improves the overall structure and readability of the report, especially when figures occupy a significant portion of the page. As a result, the figure and its surrounding text function together as a cohesive presentation unit rather than as isolated elements.
-
-From a documentation perspective, this approach contributes to a more polished and professional layout, while leaving detailed explanations to subsequent sections where appropriate. The diagram should therefore be understood as a supportive visual element within the overall report structure.
 
 
 \subsection{Detailed Use Case Diagrams}
@@ -138,6 +153,8 @@ Alternative Flow & \vspace{-0.3cm}
 \end{itemize} \\
 \hline
 \end{tabular}
+\caption{Functional specification for FR-G01: Login / Register}
+\label{tab:fr-g01-login-register}
 \end{table}
 
 \paragraph{FR-G02: Manage Profile}
@@ -171,6 +188,8 @@ Main Flow & \vspace{-0.3cm}
 \end{enumerate} \\
 \hline
 \end{tabular}
+\caption{Functional specification for FR-G02: Manage Profile}
+\label{tab:fr-g02-manage-profile}
 \end{table}
 
 % --- STUDENT FUNCTIONS ---
@@ -207,6 +226,8 @@ Main Flow & \vspace{-0.3cm}
 \end{enumerate} \\
 \hline
 \end{tabular}
+\caption{Functional specification for FR-U01: Take Practice Quiz}
+\label{tab:fr-u01-take-practice-quiz}
 \end{table}
 
 \paragraph{FR-U02: Submit \& View Results}
@@ -239,6 +260,8 @@ Main Flow & \vspace{-0.3cm}
 \end{enumerate} \\
 \hline
 \end{tabular}
+\caption{Functional specification for FR-U02: Submit and View Results}
+\label{tab:fr-u02-submit-view-results}
 \end{table}
 
 \paragraph{FR-U03: Join Live Session}
@@ -271,6 +294,8 @@ Main Flow & \vspace{-0.3cm}
 \end{enumerate} \\
 \hline
 \end{tabular}
+\caption{Functional specification for FR-U03: Join Live Session}
+\label{tab:fr-u03-join-live-session}
 \end{table}
 
 \paragraph{FR-U04: AI Learning Recommendations}
@@ -303,6 +328,8 @@ Main Flow & \vspace{-0.3cm}
 \end{enumerate} \\
 \hline
 \end{tabular}
+\caption{Functional specification for FR-U04: AI Learning Recommendations}
+\label{tab:fr-u04-ai-learning-recommendations}
 \end{table}
 
 % --- TEACHER FUNCTIONS ---
@@ -339,6 +366,8 @@ Main Flow & \vspace{-0.3cm}
 \end{enumerate} \\
 \hline
 \end{tabular}
+\caption{Functional specification for FR-T01: Create and Manage Quizzes}
+\label{tab:fr-t01-create-manage-quizzes}
 \end{table}
 
 \paragraph{FR-T02: Manage Classes \& Students}
@@ -371,6 +400,8 @@ Main Flow & \vspace{-0.3cm}
 \end{enumerate} \\
 \hline
 \end{tabular}
+\caption{Functional specification for FR-T02: Manage Classes and Students}
+\label{tab:fr-t02-manage-classes-students}
 \end{table}
 
 \paragraph{FR-T03: View Class Analytics}
@@ -403,6 +434,8 @@ Main Flow & \vspace{-0.3cm}
 \end{enumerate} \\
 \hline
 \end{tabular}
+\caption{Functional specification for FR-T03: View Class Analytics}
+\label{tab:fr-t03-view-class-analytics}
 \end{table}
 
 \paragraph{FR-T04: AI-Assisted Question Generation}
@@ -435,6 +468,8 @@ Main Flow & \vspace{-0.3cm}
 \end{enumerate} \\
 \hline
 \end{tabular}
+\caption{Functional specification for FR-T04: AI-Assisted Question Generation}
+\label{tab:fr-t04-ai-assisted-question-generation}
 \end{table}
 \section{Business Process Modeling}
 
@@ -517,6 +552,8 @@ NFR-P01 & The system shall respond to user actions within an acceptable time. & 
 NFR-P02 & The system shall support concurrent users during live quiz sessions. & $\geq$ 100 concurrent users \\
 \hline
 \end{tabular}
+\caption{Non-functional performance requirements of QuizSpark}
+\label{tab:nfr-performance}
 \end{table}
 \subsection{Security}
 
@@ -533,6 +570,8 @@ NFR-S01 & User authentication shall be required for accessing protected features
 NFR-S02 & Sensitive user data shall be securely stored and transmitted. & Encrypted communication (HTTPS) \\
 \hline
 \end{tabular}
+\caption{Non-functional security requirements of QuizSpark}
+\label{tab:nfr-security}
 \end{table}
 \subsection{Usability}
 
@@ -549,6 +588,8 @@ NFR-U01 & The system shall provide an intuitive user interface. & Basic tasks co
 NFR-U02 & The system shall provide clear feedback during quiz participation. & Immediate visual or textual feedback \\
 \hline
 \end{tabular}
+\caption{Non-functional usability requirements of QuizSpark}
+\label{tab:nfr-usability}
 \end{table}
 
 \subsection{Maintainability}
@@ -566,4 +607,6 @@ NFR-M01 & The system shall be modular and loosely coupled. & Layered architectur
 NFR-M02 & The system shall support future feature extensions. & Well-defined APIs and documentation \\
 \hline
 \end{tabular}
+\caption{Non-functional maintainability requirements of QuizSpark}
+\label{tab:nfr-maintainability}
 \end{table}

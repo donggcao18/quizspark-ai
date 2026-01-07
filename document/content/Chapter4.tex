@@ -24,8 +24,8 @@ The application is designed using a robust Client-Server architecture, ensuring 
     \end{itemize}
 \end{itemize}
 
-\subsection{High-Level Design}
-The high-level design of the system illustrates how the various components interact with each other to fulfill the user's requests. The architecture is stratified into standard logical layers, which promotes separation of concerns and maintainability.
+\subsection{High-level Design}
+The package diagram of the system (Figure~\ref{fig:high_level_arch}) illustrates how the main front-end and back-end packages are organized and how they depend on each other to fulfill user requests. It shows the system as a set of logical layers and modules, highlighting separation of concerns, clear dependency directions, and overall maintainability.
 
 \begin{figure}[htbp]
     \centering
@@ -34,12 +34,10 @@ The high-level design of the system illustrates how the various components inter
     \label{fig:high_level_arch}
 \end{figure}
 
-The system is organized into the following layers:
-The top-level split follows the client–server boundary: a React-based Front-end responsible for user interaction, and a Spring Boot Back-end responsible for business logic and persistence. Each side is further decomposed into cohesive packages with clear dependency rules.
-
+\vspace{3.0em}
 On the \textbf{Front-end}, the main packages are:
 \begin{itemize}
-    \item \textbf{pages}: Route-level containers that model the main user flows (e.g., Dashboard, Banks, Practice, Workspace). A page orchestrates data fetching and composes multiple UI components into a complete screen.
+    \item \textbf{pages}: Route-level containers that model the main user flows (e.g., Dashboard, Questions Banks, Practice, Workspace). A page orchestrates data fetching and composes multiple UI components into a complete screen.
     \item \textbf{components}: Reusable, presentation-focused building blocks such as buttons, cards, dialogs, layout shells, and input controls. Components are stateless or minimally stateful and are designed to be shared across many pages.
     \item \textbf{lib}: Cross-cutting utilities and hooks that encapsulate client-side logic, including API clients, authentication helpers, form utilities, and shared configuration. Pages and components both depend on this package, but it does not depend back on them, keeping the front-end dependency graph acyclic.
 \end{itemize}
@@ -61,12 +59,12 @@ Dependencies always flow inwards: the front-end \texttt{pages} depend on \texttt
 \subsection{Component Design}
 \begin{figure}[htbp]
     \centering
-    \includegraphics[width=0.8\textwidth]{images/Component_Diagram.png}
+    \includegraphics[width=1.0\textwidth]{images/Component_Diagram.png}
     \caption{Component Diagram of QuizSpark AI System}
     \label{fig:component_diagram}
 \end{figure}
 
-The application is composed of several key components that work together to provide the desired functionality.
+The application is composed of several key components that work together to provide the desired functionality (see more in the Figure ~\ref{fig:component_diagram}).
 
 \textbf{Frontend Components (React)}
 The frontend is structured into modular feature-based components:
@@ -92,7 +90,7 @@ The backend is organized into functional modules that encapsulate the business l
 \subsection{User Interface Design Principles}
 The user interface of QuizSpark AI is designed as a modern, dark-themed web application that prioritizes readability, focus, and consistency across all screens. This subsection defines the standard layouts, visual language, and interaction patterns that all UI components must follow.
 
-\subsubsection{Screen Specifications and Layout}
+\subsubsection{a. Screen Specifications and Layout}
 QuizSpark AI is implemented as a responsive web application optimized for desktop and laptop devices, with graceful adaptation to larger tablets.
 
 \begin{itemize}
@@ -110,7 +108,7 @@ QuizSpark AI is implemented as a responsive web application optimized for deskto
 
 On the \textbf{My Banks} screen, the layout consists of a filter toolbar (All Banks, Published, Draft) and a searchable list of question bank cards. On the \textbf{Practice} screen, the layout is split into two main columns: the left column shows the active question and answer options, while the right column shows practice statistics and a navigation grid for jumping between questions.
 
-\subsubsection{Color System}
+\subsubsection{b. Color System}
 The application adopts a dark UI theme with a limited, consistent color palette. All colors are defined as CSS variables and reused across components to ensure visual consistency.
 
 \begin{itemize}
@@ -135,7 +133,7 @@ The application adopts a dark UI theme with a limited, consistent color palette.
     \item \textbf{Hover and focus states:} All interactive elements (buttons, list items, navigation links) define lighter background overlays or border highlights on hover and focus, improving discoverability and accessibility.
 \end{itemize}
 
-\subsubsection{Typography}
+\subsubsection{c. Typography}
 The typography system uses a single, modern sans-serif font family across the entire application (e.g., Inter or Roboto) to maintain a clean and cohesive look.
 
 \begin{itemize}
@@ -151,7 +149,7 @@ The typography system uses a single, modern sans-serif font family across the en
     \item \textbf{Consistency rules:} Heading levels and text styles are not redefined at the component level; instead, components reuse global typography tokens to avoid visual fragmentation.
 \end{itemize}
 
-\subsubsection{Navigation and Interaction Patterns}
+\subsubsection{d. Navigation and Interaction Patterns}
 The UI follows consistent patterns so that users can easily understand and predict how to interact with the system.
 
 \begin{itemize}
@@ -170,7 +168,8 @@ The database design for QuizSpark AI follows a relational model implemented in P
 \subsubsection{a. Entity Definitions}
 
 \paragraph{User} 
-\textbf{Key attributes:}
+
+
 \begin{itemize}
     \item \textit{id}: Unique identifier of a user in the system.
     \item \textit{username}: Login name used for authentication.
@@ -185,7 +184,7 @@ The database design for QuizSpark AI follows a relational model implemented in P
 
 
 \paragraph{Classroom}
-\textbf{Key attributes:}
+
 \begin{itemize}
     \item \textit{id}: Unique identifier of a classroom.
     \item \textit{name}: Name of the classroom.
@@ -198,7 +197,7 @@ The database design for QuizSpark AI follows a relational model implemented in P
 
 
 \paragraph{Question Bank}
-\textbf{Key attributes:}
+
 \begin{itemize}
     \item \textit{id}: Identifier of a question bank.
     \item \textit{name}: Name of the question bank.
@@ -215,7 +214,7 @@ The database design for QuizSpark AI follows a relational model implemented in P
 
 
 \paragraph{Question}
-\textbf{Key attributes:}
+
 \begin{itemize}
     \item \textit{id}: Identifier of a question.
     \item \textit{description}: Content of the question.
@@ -230,7 +229,7 @@ The database design for QuizSpark AI follows a relational model implemented in P
 
 
 \paragraph{Tag}
-\textbf{Key attributes:}
+
 \begin{itemize}
     \item \textit{id}: Identifier of a tag.
     \item \textit{name}: Name of the tag.
@@ -243,7 +242,7 @@ The Tag entity provides a mechanism for categorizing questions by topic, difficu
 
 
 \paragraph{Practice}
-\textbf{Key attributes:}
+
 \begin{itemize}
     \item \textit{id}: Identifier of a practice session.
     \item \textit{closed}: Indicates whether the practice session is completed.
@@ -257,7 +256,7 @@ The Practice entity represents a quiz or practice session performed by a user.
 
 
 \paragraph{File}
-\textbf{Key attributes:}
+
 \begin{itemize}
     \item \textit{id}: Identifier of an uploaded file.
     \item \textit{file\_name}: Name of the file.
@@ -268,7 +267,7 @@ The Practice entity represents a quiz or practice session performed by a user.
 \textbf{Purpose:} The File entity represents digital resources uploaded by users, such as images or documents used in learning materials.
 
 \subsubsection{b. Entity--Relationship Diagram}
-The following diagram illustrates the relationships between the key entities in the QuizSpark AI database schema.
+The following diagram (Figure~\Ref{fig:erd_diagram}) illustrates the relationships between the key entities in the QuizSpark AI database schema.
 \begin{figure}[http]
     \centering
     \includegraphics[width=\textwidth]{images/ERD.pdf}
@@ -279,7 +278,7 @@ The following diagram illustrates the relationships between the key entities in 
 \clearpage
 
 \subsubsection{c. Database Schema}
-All core concepts of the system (users, classrooms, practice sessions, question banks, questions, tags, and uploaded files) are modeled as tables connected through foreign keys and junction tables. The goal of the schema is to ensure referential integrity, support efficient querying for learning analytics, and remain flexible for future feature extension.
+All core concepts of the system (users, classrooms, practice sessions, question banks, questions, tags, and uploaded files) are modeled as tables connected through foreign keys and junction tables. The goal of the schema (shown in the Figure~\ref{fig:relation_schema}) is to ensure referential integrity, support efficient querying for learning analytics, and remain flexible for future feature extension.
 
 \begin{figure}[t]
     \centering

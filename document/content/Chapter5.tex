@@ -7,7 +7,7 @@ This section details the internal working mechanisms of the system, structured b
 \subsection{Frontend}
 The frontend architecture is modular, with specialized components handling distinct functional areas:
 
-\subsubsection{AI Integration}
+\subsubsection{a. AI Integration}
 The AI integration is designed to provide a context-aware, interactive chat experience. The functionality is encapsulated within the \texttt{ChatBot} component, supported by \texttt{ChatBotContext} for state management and the \texttt{api} module for backend communication.
 
 \paragraph{Core Components}
@@ -25,7 +25,7 @@ The interaction follows a structured flow:
     \item \textbf{Execution}: Upon user input, a payload is constructed containing the message, selected files, and formatted context. This is streamed to the backend, with real-time listeners updating the UI as data chunks arrive.
 \end{enumerate}
 
-\subsubsection{Practice \& Quiz Module}
+\subsubsection{b. Practice \& Quiz Module}
 The Practice \& Quiz Module is the core assessment engine of QuizSpark, managing the lifecycle of questions and user practice sessions. It integrates manual content creation with advanced AI-driven generation.
 
 \paragraph{Question Management}
@@ -42,10 +42,30 @@ The practice interface (\texttt{PracticePage.tsx}) is designed for flexibility. 
 \paragraph{Categorization with Tags}
 A robust tagging system allows for granular organization. Users can assign custom-colored tags to questions, which then serve as filters during practice initiation, enabling focused study sessions on specific chapters or difficulty levels.
 
+\subsubsection{c. Classroom Module}
+The Classroom Module provides collaborative learning features, allowing teachers to organize students into virtual classrooms.
+
+\paragraph{Core Components}
+\begin{itemize}
+    \item \textbf{ClassroomSection}: Defined in \texttt{classroom\_section.tsx}, this component displays a searchable list of classrooms the user belongs to. It fetches classroom data via the \texttt{getUserClassrooms} API and provides filtering by name or description.
+    \item \textbf{ClassroomCreationDialog}: A modal component that allows teachers and admins to create new classrooms by specifying a name and description. Upon creation, the backend generates a unique join code.
+    \item \textbf{JoinClassroomDialog}: Enables students to join existing classrooms by entering a 6-character alphanumeric join code.
+    \item \textbf{ClassroomOverviewPage}: The detailed view for a specific classroom, displaying member lists with role badges, inline user search for invitations, and member management controls.
+\end{itemize}
+
+\paragraph{Classroom Interaction Flow}
+The classroom workflow supports both code-based and invitation-based membership:
+\begin{enumerate}
+    \item \textbf{Classroom Creation}: Teachers create a classroom via the dialog; the system generates a unique join code.
+    \item \textbf{Joining via Code}: Students enter the join code in \texttt{JoinClassroomDialog}, which calls the \texttt{POST /classrooms/join} endpoint.
+    \item \textbf{Direct Invitation}: Teachers search for users by username and invite them directly via the \texttt{inviteToClassroom} API.
+    \item \textbf{Member Display}: The overview page renders member cards with role indicators (Owner, Teacher, Student) and provides removal controls for authorized users.
+\end{enumerate}
+
 \subsection{Backend}
 The backend, built with Spring Boot, implements the business logic and exposes RESTful endpoints.
 
-\subsubsection{Practice \& Assessment Module}
+\subsubsection{a. Practice \& Assessment Module}
 The Practice \& Assessment Module manages the end-to-end evaluation process, focusing on session state tracking, real-time answer evaluation, and performance metric calculations.
 
 \paragraph{Practice Session State Tracking}
@@ -70,7 +90,7 @@ The module implements a performance-driven selection algorithm and aggregates se
     \item \textbf{Advanced Question Prioritization}: The \texttt{PracticeStatistic} class calculates a "Practice Score" (e.g., +1.0 for correct, -1.5 for incorrect). Questions with the lowest scores are prioritized to reinforce weak areas.
     \item \textbf{Session Metadata Aggregation}: The \texttt{PracticeDTO} summarizes total time, accuracy rates, and topic (tag) distribution for the user interface.
 \end{itemize}
-\subsubsection{AI Intelligence Module}
+\subsubsection{b. AI Intelligence Module}
 The AI Intelligence Module powers the application's most advanced features through three primary services: \texttt{AiService} (orchestration via Spring AI), \texttt{ChatService} (conversational state), and \texttt{PdfProcessorService} (intelligent document parsing).
 
 \paragraph{Dynamic Question Generation}
@@ -96,16 +116,35 @@ Complex document ingestion is handled using a dual-strategy approach to maximize
     \item \textbf{Intelligent Splitting}: The \texttt{PdfProcessorService} analyzes page density and formatting to split documents into contextually aware chunks for processing.
 \end{itemize}
 
+\subsubsection{c. Classroom Module}
+The Classroom Module implements collaborative features through the \texttt{ClassroomService} and \texttt{ClassroomController}, managing classroom lifecycles and membership.
+
+\paragraph{Classroom Lifecycle Management}
+The service handles complete classroom administration:
+\begin{itemize}
+    \item \textbf{Creation}: The \texttt{createClassroom} method creates a new \texttt{Classroom} entity with a unique 6-character alphanumeric join code generated by \texttt{generateUniqueJoinCode()}. The creator is automatically added as a \texttt{ClassroomMember} with the \texttt{OWNER} role.
+    \item \textbf{Retrieval}: The \texttt{getClassrooms} method returns all classrooms where the authenticated user is a member, using the \texttt{ClassroomMemberRepository}.
+    \item \textbf{Detail View}: The \texttt{getClassroomById} method validates membership before returning a \texttt{ClassroomDetailsDTO} containing full member information.
+\end{itemize}
+
+\paragraph{Membership Management}
+The module supports flexible membership operations:
+\begin{itemize}
+    \item \textbf{Join via Code}: The \texttt{joinClassroom} method validates the join code, checks for existing membership, and adds the user as a \texttt{STUDENT}.
+    \item \textbf{Direct Invitation}: The \texttt{inviteUser} method verifies that the inviter has \texttt{OWNER} or \texttt{TEACHER} privileges before adding the invitee as a \texttt{STUDENT}.
+    \item \textbf{Role Hierarchy}: The system enforces a three-tier role system (\texttt{OWNER}, \texttt{TEACHER}, \texttt{STUDENT}) with corresponding permission checks.
+\end{itemize}
+
 \subsection{Database}
 The application utilizes PostgreSQL for reliable data persistence, managed via Spring Data JPA.
 
-\subsubsection{Data Persistence Implementation}
+\subsubsection{a. Data Persistence Implementation}
 \begin{itemize}
     \item \textbf{Repository Pattern}: Data access is handled by repository interfaces (e.g., \texttt{UserRepository}) extending \texttt{JpaRepository}, providing standard CRUD operations and custom JPQL queries.
     \item \textbf{Schema Optimization}: The schema employs indexing on key columns and strictly enforced foreign key constraints to maintain integrity and performance.
 \end{itemize}
 
-\subsubsection{Entity Definitions}
+\subsubsection{b. Entity Definitions}
 The primary entities in the system are defined as follows:
 
 \begin{itemize}
@@ -286,7 +325,7 @@ This section details the functional testing process performed to validate the Qu
 \subsection{Functional Testing Report Overview}
 The functional testing phase aims to verify that the system's features correctly implement the business logic and user requirements. By simulating end-to-end user workflows, this methodology ensures the reliability of the application's core services.
 
-\subsubsection{Testing Objectives}
+\subsubsection{a. Testing Objectives}
 The primary objectives of the functional testing process include:
 \begin{itemize}
     \item Ensuring 100\% alignment between implemented features and functional requirements.
@@ -295,7 +334,7 @@ The primary objectives of the functional testing process include:
     \item Confirming a consistent user experience across different user roles (Student and Teacher).
 \end{itemize}
 
-\subsubsection{Test Scope}
+\subsubsection{b. Test Scope}
 The scope of functional testing covers the following modules:
 \begin{itemize}
     \item \textbf{User Identity}: Registration, Login (Local and OAuth), and Session Management.
@@ -304,7 +343,7 @@ The scope of functional testing covers the following modules:
     \item \textbf{AI Intelligence}: Automated question extraction from documents and performance-based personalization.
 \end{itemize}
 
-\subsubsection{Test Environment}
+\subsubsection{c. Test Environment}
 Testing was conducted in a controlled environment with the following specifications:
 \begin{itemize}
     \item \textbf{Operating Systems}: Windows 11 (Development/Web), Android 13 (Mobile).
@@ -313,7 +352,7 @@ Testing was conducted in a controlled environment with the following specificati
     \item \textbf{Frontend Stack}: React 18+ with Vite, Tailwind CSS.
 \end{itemize}
 
-\subsubsection{Results Executive Summary}
+\subsubsection{d. Results Executive Summary}
 The following table provides a high-level summary of the functional testing outcomes across all categories.
 
 \begin{center}
@@ -329,11 +368,10 @@ Student Features & 3 & 100\% & All student workflows are fully operational. \\ \
 
 \subsection{Testing Detail}
 This section provides a structured outline and report for functional testing of the QuizzSpark platform. It serves as the primary record for validating the system against its functional requirements.
-
-\subsubsection{Shared Features (Student \& Teacher)}
-
-\paragraph{Register \& Login}
-\begin{center}
+\subsubsection{a. Shared Features (Student \& Teacher)}
+\textbf{Register \& Login} \\
+\begin{table}[H]
+\centering
 \begin{tabular}{|c|p{4.5cm}|p{5.5cm}|p{3.0cm}|}
 \hline
 \textbf{ID} & \textbf{Test Scenario} & \textbf{Expected Result} & \textbf{Actual Result} \\ \hline
@@ -343,99 +381,131 @@ TC-SH-03 & OAuth Login (Google) & Successful authentication via Google account. 
 TC-SH-04 & OAuth Login (Facebook) & Successful authentication via Facebook account. & Not yet implemented \\ \hline
 TC-SH-05 & Login with invalid credentials & Error message displayed; access denied. & Working as expected \\ \hline
 \end{tabular}
-\end{center}
+\caption{Functional test cases for shared registration and login features in QuizSpark}
+\label{tab:test-shared-register-login}
+\end{table}
 
-\paragraph{Personal Quiz Management}
-\begin{center}
+\clearpage
+\textbf{Personal Quiz Management}
+\begin{table}[H]
+\centering
 \begin{tabular}{|c|p{4.5cm}|p{5.5cm}|p{2.0cm}|}
 \hline
-\textbf{ID} & \textbf{Test Scenario} & \textbf{Expected Result} & \textbf{Actual Result} \\ \hline
+	\textbf{ID} & \textbf{Test Scenario} & \textbf{Expected Result} & \textbf{Actual Result} \\ \hline
 TC-SH-06 & Create a new Quiz (Title, Description, Questions) & Quiz saved in database and visible in user's workspace. & Working as expected \\ \hline
 TC-SH-07 & Edit an existing Quiz & Changes (e.g., modified question text) are persisted correctly. & Working as expected \\ \hline
 TC-SH-08 & Delete a Quiz & Quiz removed from workspace and database. & Working as expected \\ \hline
 \end{tabular}
-\end{center}
+\caption{Functional test cases for shared personal quiz management features in QuizSpark}
+\label{tab:test-shared-personal-quiz}
+\end{table}
 
-\paragraph{Leaderboard}
-\begin{center}
+\textbf{Leaderboard}
+\begin{table}[H]
+\centering
 \begin{tabular}{|l|p{4.5cm}|p{4.5cm}|p{3.5cm}|}
 \hline
-\textbf{ID} & \textbf{Test Scenario} & \textbf{Expected Result} & \textbf{Actual Result} \\ \hline
+	\textbf{ID} & \textbf{Test Scenario} & \textbf{Expected Result} & \textbf{Actual Result} \\ \hline
 TC-SH-09 & View global/quiz-specific leaderboard & Correct ranking of users based on scores/time. & Not yet implemented \\ \hline
 TC-SH-10 & Real-time update of leaderboard scores & Scores refresh upon completion of a quiz session. & Not yet implemented \\ \hline
 \end{tabular}
-\end{center}
+\caption{Functional test cases for shared leaderboard functionality in QuizSpark}
+\label{tab:test-shared-leaderboard}
+\end{table}
 
-\paragraph{Multi-Platform Access}
-\begin{center}
+\textbf{Multi-Platform Access}
+\begin{table}[H]
+\centering
 \begin{tabular}{|l|p{4.5cm}|p{4.5cm}|p{3.5cm}|}
 \hline
-\textbf{ID} & \textbf{Test Scenario} & \textbf{Expected Result} & \textbf{Actual Result} \\ \hline
+	\textbf{ID} & \textbf{Test Scenario} & \textbf{Expected Result} & \textbf{Actual Result} \\ \hline
 TC-SH-11 & Sync data between Web and Mobile & Quiz created on Web is visible on the Mobile app immediately. & Not yet implemented \\ \hline
 TC-SH-12 & Cross-platform Login session & User remains logged in across different devices (if supported). & Not yet implemented \\ \hline
 \end{tabular}
-\end{center}
+\caption{Functional test cases for shared multi-platform access in QuizSpark}
+\label{tab:test-shared-multiplatform}
+\end{table}
 
-\paragraph{Privacy \& Settings}
-\begin{center}
+\textbf{Privacy \& Settings}
+\begin{table}[H]
+\centering
 \begin{tabular}{|l|p{4.5cm}|p{4.5cm}|p{3.5cm}|}
 \hline
 \textbf{ID} & \textbf{Test Scenario} & \textbf{Expected Result} & \textbf{Actual Result} \\ \hline
 TC-SH-13 & Privacy settings (Public vs. Private) & Private quizzes are inaccessible via shared link if not authorized. & Working as expected \\ \hline
 \end{tabular}
-\end{center}
+\caption{Functional test cases for shared privacy \& settings features in QuizSpark}
+\label{tab:test-shared-privacy-settings}
+\end{table}
 
-\paragraph{AI Question Generation}
-\begin{center}
+\clearpage
+\textbf{AI Question Generation}
+\begin{table}[H]
+\centering
 \begin{tabular}{|l|p{4.5cm}|p{4.5cm}|p{3.5cm}|}
 \hline
 \textbf{ID} & \textbf{Test Scenario} & \textbf{Expected Result} & \textbf{Actual Result} \\ \hline
 TC-SH-14 & Generate questions via file upload (PDF, Word, Markdown) & AI extracts concepts and produces relevant MCQ questions from the file. & Working as expected \\ \hline
 TC-SH-15 & Generate questions based on user practice history & AI analyzes past performance and targets identified knowledge gaps. & Working as expected \\ \hline
 \end{tabular}
-\end{center}
+\caption{Functional test cases for shared AI question generation features in QuizSpark}
+\label{tab:test-shared-ai-question-generation}
+\end{table}
 
-\subsubsection{Teacher Features:}
+\subsubsection{b.Teacher Features:}
 
-\paragraph{Manage Classes}
-\begin{center}
+\textbf{Manage Classes}
+\begin{table}[H]
+\centering
 \begin{tabular}{|l|p{4.5cm}|p{4.5cm}|p{3.5cm}|}
 \hline
 \textbf{ID} & \textbf{Test Scenario} & \textbf{Expected Result} & \textbf{Actual Result} \\ \hline
 TC-TE-01 & Create a new Class/Group & Class ID generated; Teacher assigned as owner. & Working as expected \\ \hline
 TC-TE-02 & Add/Remove students from Class & Student list updated; students see the class in their dashboard. & Working as expected \\ \hline
 \end{tabular}
-\end{center}
+\caption{Functional test cases for teacher class management features in QuizSpark}
+\label{tab:test-teacher-manage-classes}
+\end{table}
 
-\paragraph{Host Quiz Session}
-\begin{center}
+\textbf{Host Quiz Session}
+\begin{table}[H]
+\centering
 \begin{tabular}{|l|p{4.5cm}|p{4.5cm}|p{3.5cm}|}
 \hline
-\textbf{ID} & \textbf{Test Scenario} & \textbf{Expected Result} & \textbf{Actual Result} \\ \hline
+    \textbf{ID} & \textbf{Test Scenario} & \textbf{Expected Result} & \textbf{Actual Result} \\ \hline
 TC-TE-03 & Start a live host session for a Quiz & Join code generated; session active in backend. & Not yet implemented \\ \hline
 \end{tabular}
-\end{center}
+\caption{Functional test cases for teacher live quiz hosting in QuizSpark}
+\label{tab:test-teacher-host-quiz}
+\end{table}
 
-\subsubsection{Student Features:}
+\subsubsection{c. Student Features:}
 
-\paragraph{Join Quiz Session}
-\begin{center}
+\textbf{Join Quiz Session}
+\begin{table}[H]
+\centering
 \begin{tabular}{|l|p{4.5cm}|p{4.5cm}|p{3.5cm}|}
 \hline
-\textbf{ID} & \textbf{Test Scenario} & \textbf{Expected Result} & \textbf{Actual Result} \\ \hline
+	\textbf{ID} & \textbf{Test Scenario} & \textbf{Expected Result} & \textbf{Actual Result} \\ \hline
 TC-ST-01 & Join session via Invite Code & Student name appears in Teacher's host lobby. & Working as expected \\ \hline
 \end{tabular}
-\end{center}
+\caption{Functional test cases for student live quiz session participation in QuizSpark}
+\label{tab:test-student-join-session}
+\end{table}
 
-\paragraph{Practice Quiz \& Results}
-\begin{center}
+\clearpage
+\textbf{Practice Quiz \& Results}
+\begin{table}[H]
+\centering
 \begin{tabular}{|l|p{4.5cm}|p{4.5cm}|p{3.5cm}|}
 \hline
-\textbf{ID} & \textbf{Test Scenario} & \textbf{Expected Result} & \textbf{Actual Result} \\ \hline
+	\textbf{ID} & \textbf{Test Scenario} & \textbf{Expected Result} & \textbf{Actual Result} \\ \hline
 TC-ST-02 & Complete a practice quiz (Single User) & Answers submitted; score calculated instantly. & Working as expected \\ \hline
 TC-ST-03 & View detailed results dashboard & Breakdown of correct/incorrect questions, time taken, and AI feedback. & Working as expected \\ \hline
 \end{tabular}
-\end{center}
+\caption{Functional test cases for student practice quizzes and result reporting in QuizSpark}
+\label{tab:test-student-practice-results}
+\end{table}
 
 \section{Deployment}
 % Deployment instructions
