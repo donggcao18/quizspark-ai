@@ -9,6 +9,6 @@
 *.bbl
 *.blg
 *.lot
-
+Report.synctex(busy)
 # Build directory
 build/

@@ -13,4 +13,12 @@ Code
 
 
 
+Todo 7/1
+Dong: Pkg diagram, chapter 1
+Long: component diagram 
+phong: class diagram
+viet: update slide structure
+
+
+
 

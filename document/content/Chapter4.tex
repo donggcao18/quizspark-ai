@@ -29,25 +29,34 @@ The high-level design of the system illustrates how the various components inter
 
 \begin{figure}[htbp]
     \centering
-    \fbox{\begin{minipage}{0.6\textwidth}
-        \centering
-        \vspace{2cm}
-        [Place High-Level Architecture Diagram Here]
-        \vspace{2cm}
-    \end{minipage}}
-    \caption{High-Level System Architecture}
+    \includegraphics[width=0.6\textwidth]{images/pkg_diagram.pdf}
+    \caption{Package Diagram of QuizSpark AI System}
     \label{fig:high_level_arch}
 \end{figure}
 
 The system is organized into the following layers:
+The top-level split follows the client–server boundary: a React-based Front-end responsible for user interaction, and a Spring Boot Back-end responsible for business logic and persistence. Each side is further decomposed into cohesive packages with clear dependency rules.
 
+On the \textbf{Front-end}, the main packages are:
 \begin{itemize}
-    \item \textbf{Presentation Layer}: Built with React, this layer runs in the user's browser. It is responsible for rendering the UI, capturing user input, and communicating with the backend via REST APIs. It handles client-side routing and state management.
-    \item \textbf{Controller Layer}: Implemented using Spring MVC, this layer intercepts incoming HTTP requests. It validates the request data and delegates the execution to the Service layer. It is also responsible for serializing the response back to the client.
-    \item \textbf{Service Layer}: This layer encapsulates the core business logic of the application. It orchestrates complex operations, such as generating quizzes using AI, calculating scores, and managing user content. It acts as a bridge between the Controller and the Data Access layers.
-    \item \textbf{Data Access Layer (DAO)}: Utilizing Spring Data JPA, this layer abstracts the database interactions. It provides a set of interfaces to perform CRUD (Create, Read, Update, Delete) operations on the database entities without writing boilerplate SQL code.
-    \item \textbf{Database Persistence}: The data is persistently stored in a PostgreSQL database. It holds the schema for users, quizzes, questions, and other application data.
+    \item \textbf{pages}: Route-level containers that model the main user flows (e.g., Dashboard, Banks, Practice, Workspace). A page orchestrates data fetching and composes multiple UI components into a complete screen.
+    \item \textbf{components}: Reusable, presentation-focused building blocks such as buttons, cards, dialogs, layout shells, and input controls. Components are stateless or minimally stateful and are designed to be shared across many pages.
+    \item \textbf{lib}: Cross-cutting utilities and hooks that encapsulate client-side logic, including API clients, authentication helpers, form utilities, and shared configuration. Pages and components both depend on this package, but it does not depend back on them, keeping the front-end dependency graph acyclic.
 \end{itemize}
+
+On the \textbf{Back-end}, the system is structured as a layered service stack:
+\begin{itemize}
+    \item \textbf{api}: Spring MVC controllers that expose REST endpoints. This layer is the only entry point from the outside world, translating HTTP requests into service calls and mapping domain results into DTOs and HTTP responses.
+    \item \textbf{services}: Core business logic layer responsible for orchestrating use cases such as quiz generation, practice evaluation, classroom management, and AI workflows. Services coordinate multiple repositories, models, and utilities in transactional boundaries.
+    \item \textbf{models}: Domain entities that represent persistent state (users, classrooms, question banks, questions, practices, files). These classes are mapped to database tables and form the backbone of the domain model.
+    \item \textbf{repositories}: Data access abstractions built on Spring Data JPA. Repositories encapsulate all persistence logic and provide type-safe methods for querying and mutating the underlying PostgreSQL database.
+    \item \textbf{dto}: Data Transfer Objects used to decouple the external API contracts from the internal domain model. DTOs are populated by services and returned by the API layer, ensuring that internal fields are not accidentally exposed.
+    \item \textbf{utils}: Shared helper classes for common concerns such as JWT handling, date and time manipulation, collection utilities, and AI prompt construction. These utilities are reused across services and configuration classes.
+    \item \textbf{configs}: Centralized configuration classes defining security filters, CORS rules, bean wiring, and integration settings (e.g., database, Firebase, AI providers). This package bootstraps the runtime environment used by the other back-end layers.
+\end{itemize}
+
+Dependencies always flow inwards: the front-end \texttt{pages} depend on \texttt{components} and \texttt{lib}, and the back-end \texttt{api} layer depends on \texttt{services}, which in turn depend on \texttt{models} and \texttt{repositories}. Utilities, DTOs, and configuration classes support these layers without introducing circular references. This package structure enforces a clean separation of concerns, simplifies testing, and makes it straightforward to evolve individual parts of the system without impacting unrelated modules.
+
 
 \subsection{Component Design}
 The application is composed of several key components that work together to provide the desired functionality.
