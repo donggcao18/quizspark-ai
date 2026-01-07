@@ -242,11 +242,167 @@ The primary entities in the system are defined as follows:
 
 
 \section{Functional Demonstration}
-% Screenshots and features
+This section provides a visual walkthrough of the QuizzSpark platform's core features, from initial access and authentication to advanced study management and classroom collaboration.
 
-\subsection{Student Module}
+\subsection{Landing Page and Public Access}
+The landing page serves as the entry point for users, offering an intuitive and clean interface that highlights the platform's core value.
 
-\subsection{Teacher Module}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{images/imp1.png}
+    \caption{Home Page UI}
+\end{figure}
+
+When users visit the website, the home page is displayed by default. It is designed to provide essential information about the platform's capabilities while encouraging users to engage in testing and reinforcing their knowledge across various subjects.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{images/imp2.png}
+    \caption{Essential Information}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{images/imp3.png}
+    \caption{Knowledge Reinforcement Features}
+\end{figure}
+
+The platform supports public access, allowing guest users to practice quizzes without logging in. However, to access advanced features like progress tracking and personalized recommendations, a user account is required.
+
+\subsection{User Authentication}
+QuizzSpark provides a secure and flexible authentication system.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{images/imp4.png}
+    \caption{Authentication Screen}
+\end{figure}
+
+Users can sign in or register using their Google account for a seamless experience or opt for the traditional method using an email and password.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{images/imp5.png}
+    \caption{Account Options}
+\end{figure}
+
+During registration, users provide essential profile details including account type, username, full name, date of birth, and educational level to personalize their experience.
+
+\subsection{Main Dashboard}
+The personalized Dashboard provides a high-level overview of academic progress.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{images/imp6.png}
+    \caption{Dashboard Overview}
+\end{figure}
+
+Key metrics displayed include the number of questions answered, active question banks, and the average time spent per quiz. This helps monitoring learning efficiency over time.
+
+\subsection{Question Bank Management}
+A core feature of QuizzSpark is the ability for users to curate and manage their own study materials.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{images/imp7.png}
+    \caption{Management Interface}
+\end{figure}
+
+Users can create custom question banks by specifying a name and selecting visibility options (Public or Private).
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{images/imp8.png}
+    \caption{Bank Creation Success}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{images/imp9.png}
+    \caption{Edit Options}
+\end{figure}
+
+The management console allows users to:
+\begin{itemize}
+    \item Modify bank details and toggle visibility.
+    \item Set the bank status between ``Draft'' and ``Published''.
+    \item Add or remove questions from the bank.
+    \item Permanently delete a question bank if no longer needed.
+\end{itemize}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{images/imp10.png}
+    \caption{Deletion Option}
+\end{figure}
+
+\subsection{Quiz Practice and Results}
+The practice module is designed for flexibility and immediate feedback.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{images/imp11.png}
+    \caption{Practice Configuration}
+\end{figure}
+
+Before starting, users can customize their sessions with several options:
+\begin{itemize}
+    \item Total number of questions.
+    \item Question and answer shuffling.
+    \item Real-time answer reveals.
+    \item Filtering by specific tags.
+\end{itemize}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{images/imp12.png}
+    \caption{Active Practice Session}
+\end{figure}
+
+During a session, users receive immediate visual feedback on their selections.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{images/imp13.png}
+    \caption{Real-time Feedback}
+\end{figure}
+
+Upon completion, a detailed summary is displayed, showing the total correct answers, overall accuracy percentage, and total time taken.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{images/imp14.png}
+    \caption{Results Summary}
+\end{figure}
+
+Users can also revisit and review their practice history to identify areas for improvement or retake a quiz to improve their score.
+
+\subsection{Classroom Collaboration}
+QuizzSpark facilitates collaborative learning through its Classroom feature.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{images/imp15.png}
+    \caption{Classroom Feature}
+\end{figure}
+
+The classroom UI is built to foster a shared learning environment.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{images/imp16.png}
+    \caption{Classroom UI}
+\end{figure}
+
+Once a classroom is created, the system automatically generates a unique join code.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{images/imp17.png}
+    \caption{Classroom Creation and Access}
+\end{figure}
+
+Participants can join these classrooms using the shared code to access assigned materials and participate in group study sessions.
 
 \section{Testing}
 This section details the functional testing process performed to validate the QuizzSpark platform against its specified requirements. The primary verification methodology employed for this project is \textbf{Functional Testing}, a black-box testing technique that validates the software system against its functional specifications. By focusing on the output generated in response to selected inputs, this approach ensures all core system functions align with the intended business logic.
